@@ -1,0 +1,418 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}
+{% if order %}Edit Order #{{ order.id }}{% else %}Create New Order{% endif %} - Spectre Clothing
+{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800">
+            {% if order %}Edit Order #{{ order.id }}{% else %}Create New Order{% endif %}
+        </h1>
+    </div>
+    
+    <form method="post" id="orderForm" class="space-y-6">
+        {% csrf_token %}
+        <input type="hidden" id="variant_data" name="variant_data" value="[]">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="customer" class="block text-sm font-medium text-gray-700 mb-1">Customer*</label>
+                <select id="customer" name="customer" required
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Select Customer</option>
+                    {% for customer in customers %}
+                    <option value="{{ customer.id }}" {% if order and order.customer.id == customer.id %}selected{% endif %}>
+                        {{ customer.name }} ({{ customer.phone_number }})
+                    </option>
+                    {% endfor %}
+                    <option value="new">+ New Customer</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- New Customer Form (initially hidden) -->
+        <div id="newCustomerForm" class="hidden bg-gray-50 p-4 rounded-md space-y-4">
+            <h3 class="font-medium text-gray-700">New Customer Details</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="new_customer_name" class="block text-sm font-medium text-gray-700 mb-1">Name*</label>
+                    <input type="text" id="new_customer_name" name="new_customer_name" 
+                           class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="new_customer_phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number*</label>
+                    <input type="text" id="new_customer_phone" name="new_customer_phone" 
+                           class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="new_customer_email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="new_customer_email" name="new_customer_email" 
+                           class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="new_customer_address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                    <textarea id="new_customer_address" name="new_customer_address" rows="3"
+                              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Product Selection -->
+        <div class="space-y-4">
+            <h3 class="font-medium text-gray-700">Order Items</h3>
+            
+            <div class="flex flex-wrap gap-4 mb-4">
+                <div class="w-full md:w-auto">
+                    <label for="product" class="block text-sm font-medium text-gray-700 mb-1">Product</label>
+                    <select id="product" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Select Product</option>
+                        {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.name }} (SKU: {{ product.sku }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="w-full md:w-auto" id="variantContainer" style="display: none;">
+                    <label for="variant" class="block text-sm font-medium text-gray-700 mb-1">Variant</label>
+                    <select id="variant" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Select Product First</option>
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500" id="stockInfo"></p>
+                </div>
+                
+                <div class="w-full md:w-auto" id="quantityContainer" style="display: none;">
+                    <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                    <input type="number" id="quantity" min="1" value="1" 
+                           class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                
+                <div class="w-full md:w-auto flex items-end" id="addBtnContainer" style="display: none;">
+                    <button type="button" id="addItemBtn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md transition duration-200">
+                        Add to Order
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Order Items Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Variant</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderItems" class="bg-white divide-y divide-gray-200">
+                        <!-- Items will be added here by JavaScript -->
+                        <tr id="noItemsRow">
+                            <td colspan="6" class="px-4 py-3 text-center text-sm text-gray-500">
+                                No items added to the order yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="px-4 py-3 text-right font-medium">Total:</td>
+                            <td class="px-4 py-3 font-bold text-indigo-600" id="orderTotal">$0.00</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        
+        <div>
+            <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Order Notes</label>
+            <textarea id="notes" name="notes" rows="3" 
+                      class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ order.notes|default:'' }}</textarea>
+        </div>
+        
+        <div class="flex justify-end space-x-2">
+            <a href="{% if order %}{% url 'orders:order_detail' order.id %}{% else %}{% url 'orders:order_list' %}{% endif %}" 
+               class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-md transition duration-200">
+                Cancel
+            </a>
+            <button type="submit" id="submitBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
+                {% if order %}Save Changes{% else %}Create Order{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const productSelect = document.getElementById('product');
+        const variantSelect = document.getElementById('variant');
+        const variantContainer = document.getElementById('variantContainer');
+        const quantityInput = document.getElementById('quantity');
+        const quantityContainer = document.getElementById('quantityContainer');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const addBtnContainer = document.getElementById('addBtnContainer');
+        const orderItemsTable = document.getElementById('orderItems');
+        const noItemsRow = document.getElementById('noItemsRow');
+        const orderTotalDisplay = document.getElementById('orderTotal');
+        const variantDataInput = document.getElementById('variant_data');
+        const stockInfoDisplay = document.getElementById('stockInfo');
+        const customerSelect = document.getElementById('customer');
+        const newCustomerForm = document.getElementById('newCustomerForm');
+        
+        let orderItems = [];
+        
+        // Show new customer form when selected
+        customerSelect.addEventListener('change', function() {
+            if (this.value === 'new') {
+                newCustomerForm.classList.remove('hidden');
+            } else {
+                newCustomerForm.classList.add('hidden');
+            }
+        });
+        
+        // Get variants when product is selected
+        productSelect.addEventListener('change', function() {
+            const productId = this.value;
+            
+            if (!productId) {
+                variantContainer.style.display = 'none';
+                quantityContainer.style.display = 'none';
+                addBtnContainer.style.display = 'none';
+                return;
+            }
+            
+            // Show variant dropdown
+            variantContainer.style.display = 'block';
+            variantSelect.innerHTML = '<option value="">Loading variants...</option>';
+            
+            // Fetch variants for this product
+            fetch(`/inventory/api/product-variants/?product_id=${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                        variantSelect.innerHTML = '<option value="">Error loading variants</option>';
+                        return;
+                    }
+                    
+                    variantSelect.innerHTML = '<option value="">Select Variant</option>';
+                    
+                    if (data.variants.length === 0) {
+                        variantSelect.innerHTML = '<option value="">No variants available</option>';
+                        return;
+                    }
+                    
+                    data.variants.forEach(variant => {
+                        const option = document.createElement('option');
+                        option.value = variant.id;
+                        option.textContent = `${variant.size} / ${variant.color}`;
+                        option.dataset.price = variant.product.price;
+                        option.dataset.stock = variant.quantity
+                        option.dataset.productName = variant.product.name;
+                        option.dataset.size = variant.size;
+                        option.dataset.color = variant.color;
+                        variantSelect.appendChild(option);
+                    });
+
+                    console.log(data.variants)
+                })
+                .catch(error => {
+                    console.error('Error fetching variants:', error);
+                    variantSelect.innerHTML = '<option value="">Error loading variants</option>';
+                });
+        });
+        
+        // Show stock info and quantity input when variant is selected
+        variantSelect.addEventListener('change', function() {
+            if (!this.value) {
+                quantityContainer.style.display = 'none';
+                addBtnContainer.style.display = 'none';
+                stockInfoDisplay.textContent = '';
+                return;
+            }
+            
+            const selectedOption = this.options[this.selectedIndex];
+            const stock = parseInt(selectedOption.dataset.stock);
+            
+            stockInfoDisplay.textContent = `${stock} in stock`;
+            
+            if (stock <= 0) {
+                stockInfoDisplay.classList.add('text-red-500');
+                quantityContainer.style.display = 'none';
+                addBtnContainer.style.display = 'none';
+            } else {
+                stockInfoDisplay.classList.remove('text-red-500');
+                quantityContainer.style.display = 'block';
+                addBtnContainer.style.display = 'block';
+                
+                // Set max quantity to available stock
+                quantityInput.max = stock;
+                quantityInput.value = 1;
+            }
+        });
+        
+        // Add item to order
+        addItemBtn.addEventListener('click', function() {
+            const variantId = variantSelect.value;
+            if (!variantId) return;
+            
+            const selectedOption = variantSelect.options[variantSelect.selectedIndex];
+            const quantity = parseInt(quantityInput.value);
+            const price = parseFloat(selectedOption.dataset.price);
+            const productName = selectedOption.dataset.productName;
+            const size = selectedOption.dataset.size;
+            const color = selectedOption.dataset.color;
+            
+            // Validate quantity
+            if (isNaN(quantity) || quantity <= 0) {
+                alert('Please enter a valid quantity');
+                return;
+            }
+            
+            const stock = parseInt(selectedOption.dataset.stock);
+            if (quantity > stock) {
+                alert(`Only ${stock} items available in stock`);
+                return;
+            }
+            
+            // Check if the variant is already in the order
+            const existingItemIndex = orderItems.findIndex(item => item.variant_id === variantId);
+            
+            if (existingItemIndex !== -1) {
+                // Update existing item
+                const newQuantity = orderItems[existingItemIndex].quantity + quantity;
+                
+                if (newQuantity > stock) {
+                    alert(`Cannot add more items. Total would exceed available stock (${stock})`);
+                    return;
+                }
+                
+                orderItems[existingItemIndex].quantity = newQuantity;
+                updateOrderItemsTable();
+            } else {
+                // Add new item
+                const item = {
+                    variant_id: variantId,
+                    product_name: productName,
+                    variant_display: `${size} / ${color}`,
+                    price: price,
+                    quantity: quantity,
+                    subtotal: price * quantity
+                };
+
+                orderItems.push(item);
+                updateOrderItemsTable();
+            }
+            
+            // Reset selections
+            productSelect.value = '';
+            variantContainer.style.display = 'none';
+            quantityContainer.style.display = 'none';
+            addBtnContainer.style.display = 'none';
+            stockInfoDisplay.textContent = '';
+        });
+        
+        // Update order items table
+        function updateOrderItemsTable() {
+            // Update hidden input with order items data
+            variantDataInput.value = JSON.stringify(orderItems);
+            
+            // Clear table except for the no items row
+            const rows = Array.from(orderItemsTable.querySelectorAll('tr'));
+            rows.forEach(row => {
+                if (row.id !== 'noItemsRow') {
+                    row.remove();
+                }
+            });
+            
+            // Show or hide the no items row
+            if (orderItems.length === 0) {
+                noItemsRow.style.display = 'table-row';
+            } else {
+                noItemsRow.style.display = 'none';
+                
+                // Add items to table
+                orderItems.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td class="px-4 py-3">${item.product_name}</td>
+                        <td class="px-4 py-3">${item.variant_display}</td>
+                        <td class="px-4 py-3">$${item.price.toFixed(2)}</td>
+                        <td class="px-4 py-3">${item.quantity}</td>
+                        <td class="px-4 py-3">$${item.subtotal.toFixed(2)}</td>
+                        <td class="px-4 py-3">
+                            <button type="button" class="text-red-600 hover:text-red-900" data-index="${index}">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </button>
+                        </td>
+                    `;
+                    
+                    orderItemsTable.appendChild(row);
+                    
+                    // Add event listener to remove button
+                    const removeBtn = row.querySelector('button');
+                    removeBtn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        orderItems.splice(index, 1);
+                        updateOrderItemsTable();
+                    });
+                });
+            }
+            
+            // Update order total
+            const total = orderItems.reduce((sum, item) => sum + item.subtotal, 0);
+            orderTotalDisplay.textContent = `$${total.toFixed(2)}`;
+        }
+        
+        // Form validation
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            if (orderItems.length === 0) {
+                e.preventDefault();
+                alert('Please add at least one item to the order');
+                return false;
+            }
+            
+            const customerValue = customerSelect.value;
+            if (customerValue === 'new') {
+                const name = document.getElementById('new_customer_name').value;
+                const phone = document.getElementById('new_customer_phone').value;
+                
+                if (!name || !phone) {
+                    e.preventDefault();
+                    alert('Please enter customer name and phone number');
+                    return false;
+                }
+            } else if (!customerValue) {
+                e.preventDefault();
+                alert('Please select a customer');
+                return false;
+            }
+        });
+        
+        // Initialize with existing order items (for edit mode)
+        {% if order %}
+        // Load order items
+        {% for item in order.items.all %}
+        orderItems.push({
+            variant_id: {{ item.product_variant.id }},
+            product_name: "{{ item.product_variant.product.name }}",
+            variant_display: "{{ item.product_variant.size.name }} / {{ item.product_variant.color.name }}",
+            price: {{ item.price }},
+            quantity: {{ item.quantity }},
+            subtotal: {{ item.price }} * {{ item.quantity }}
+        });
+        {% endfor %}
+
+        console.log(orderItems);
+        
+        updateOrderItemsTable();
+        {% endif %}
+    });
+</script>
+{% endblock %}
+{% endblock %}

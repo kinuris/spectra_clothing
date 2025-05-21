@@ -1,0 +1,66 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}Confirm Delete Order #{{ order.id }} - Spectre Clothing{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="text-center mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800">Confirm Delete Order</h1>
+    </div>
+    
+    <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-lg font-medium text-red-800">Warning!</h3>
+                <div class="mt-2 text-red-700">
+                    <p>You are about to delete order #{{ order.id }} for {{ order.customer.name }}.</p>
+                    <p class="mt-1">This action cannot be undone. Are you sure you want to continue?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Summary -->
+    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+        <h2 class="text-lg font-medium text-gray-900 mb-4">Order Summary</h2>
+        
+        <dl class="divide-y divide-gray-200">
+            <div class="py-2 flex justify-between">
+                <dt class="text-sm font-medium text-gray-500">Order #:</dt>
+                <dd class="text-sm text-gray-900">{{ order.id }}</dd>
+            </div>
+            <div class="py-2 flex justify-between">
+                <dt class="text-sm font-medium text-gray-500">Customer:</dt>
+                <dd class="text-sm text-gray-900">{{ order.customer.name }}</dd>
+            </div>
+            <div class="py-2 flex justify-between">
+                <dt class="text-sm font-medium text-gray-500">Date:</dt>
+                <dd class="text-sm text-gray-900">{{ order.order_date|date:"M d, Y H:i" }}</dd>
+            </div>
+            <div class="py-2 flex justify-between">
+                <dt class="text-sm font-medium text-gray-500">Status:</dt>
+                <dd class="text-sm text-gray-900">{{ order.get_status_display }}</dd>
+            </div>
+            <div class="py-2 flex justify-between">
+                <dt class="text-sm font-medium text-gray-500">Total Amount:</dt>
+                <dd class="text-sm font-bold text-indigo-600">${{ order.total_amount }}</dd>
+            </div>
+        </dl>
+    </div>
+    
+    <div class="flex justify-center space-x-4">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-md transition duration-200">
+                Confirm Delete
+            </button>
+        </form>
+        <a href="{% url 'orders:order_detail' order.id %}" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-md transition duration-200">
+            Cancel
+        </a>
+    </div>
+</div>
+{% endblock %}

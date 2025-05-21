@@ -1,0 +1,72 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}Colors - Spectre Clothing{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800">Color Management</h1>
+        <a href="{% url 'inventory:color_add' %}" 
+           class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
+            <i class="fas fa-plus mr-2"></i> Add Color
+        </a>
+    </div>
+    
+    <div class="mb-4 flex justify-between items-center">
+        <div>
+            <a href="{% url 'inventory:overview' %}" class="text-indigo-600 hover:underline">
+                <i class="fas fa-arrow-left mr-1"></i> Back to Inventory
+            </a>
+        </div>
+        <div class="space-x-2">
+            <a href="{% url 'inventory:size_list' %}" class="text-indigo-600 hover:underline">
+                <i class="fas fa-arrow-left ml-1"></i> Manage Sizes
+            </a>
+        </div>
+    </div>
+    
+    {% if colors %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+                <tr>
+                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color</th>
+                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color Code</th>
+                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Preview</th>
+                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for color in colors %}
+                <tr>
+                    <td class="px-4 py-3 whitespace-nowrap">{{ color.name }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">{{ color.color_code|default:"-" }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        {% if color.color_code %}
+                        <div class="h-6 w-12 rounded" style="background-color: {{ color.color_code }};"></div>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex space-x-2">
+                            <a href="{% url 'inventory:color_edit' color.id %}" class="text-indigo-600 hover:text-indigo-900">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'inventory:color_delete' color.id %}" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="bg-gray-50 p-6 rounded-md text-center">
+        <p class="text-gray-500 mb-4">No colors have been added yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,312 @@
+# Generated manually
+
+from django.db import migrations
+from decimal import Decimal
+
+def add_sample_products(apps, schema_editor):
+    # Get the models from the app registry
+    Product = apps.get_model('products', 'Product')
+    Category = apps.get_model('products', 'Category')
+    ProductImage = apps.get_model('products', 'ProductImage')
+    Supplier = apps.get_model('suppliers', 'Supplier')
+    
+    # Get or create suppliers first
+    suppliers = {
+        'textile_experts': None,
+        'fashion_wholesale': None,
+        'eco_fabrics': None,
+        'premium_materials': None
+    }
+    
+    # Create suppliers if they don't exist
+    sample_suppliers = [
+        {
+            'key': 'textile_experts',
+            'name': 'Textile Experts Co.',
+            'contact_person': 'Robert Mills',
+            'email': 'rmills@textileexperts.com',
+            'phone_number': '555-111-2222',
+            'address': '100 Industry Way, Manufacturing District, CA 90001'
+        },
+        {
+            'key': 'fashion_wholesale',
+            'name': 'Fashion Wholesale Ltd.',
+            'contact_person': 'Jennifer Lopez',
+            'email': 'jlopez@fashionwholesale.com',
+            'phone_number': '555-222-3333',
+            'address': '200 Commerce Blvd, Business Park, CA 90002'
+        },
+        {
+            'key': 'eco_fabrics',
+            'name': 'Eco-Friendly Fabrics',
+            'contact_person': 'Andrew Green',
+            'email': 'agreen@ecofabrics.com',
+            'phone_number': '555-333-4444',
+            'address': '300 Sustainability Rd, Green Valley, CA 90003'
+        },
+        {
+            'key': 'premium_materials',
+            'name': 'Premium Materials Inc.',
+            'contact_person': 'Sophia Chen',
+            'email': 'schen@premiummaterials.com',
+            'phone_number': '555-444-5555',
+            'address': '400 Luxury Lane, Highend District, CA 90004'
+        }
+    ]
+    
+    for supplier_data in sample_suppliers:
+        key = supplier_data.pop('key')
+        supplier, created = Supplier.objects.get_or_create(
+            name=supplier_data['name'],
+            defaults=supplier_data
+        )
+        suppliers[key] = supplier
+    
+    # Get all categories
+    categories = {}
+    for category in Category.objects.all():
+        categories[category.name] = category
+        categories[category.name.lower()] = category  # Also add lowercase version
+    
+    # Sample products with their variants
+    sample_products = [
+        {
+            'name': 'Classic Cotton T-Shirt',
+            'sku': 'TS-CLASSIC-001',
+            'category': 'T-Shirts',
+            'supplier': 'textile_experts',
+            'cost_price': '8.50',
+            'selling_price': '19.99',
+            'description': 'A comfortable classic-fit cotton t-shirt for everyday wear. Made from 100% premium cotton for breathability and durability.',
+        },
+        {
+            'name': 'Slim Fit Jeans',
+            'sku': 'JN-SLIM-001',
+            'category': 'Jeans',
+            'supplier': 'fashion_wholesale',
+            'cost_price': '22.50',
+            'selling_price': '49.99',
+            'description': 'Modern slim-fit jeans with a comfortable stretch blend. Classic five-pocket design with zip fly and button closure.',
+        },
+        {
+            'name': 'Floral Summer Dress',
+            'sku': 'DR-FLORAL-001',
+            'category': 'Dresses',
+            'supplier': 'eco_fabrics',
+            'cost_price': '18.75',
+            'selling_price': '39.99',
+            'description': 'A beautiful floral pattern dress perfect for summer days. Features a flowy design with adjustable straps and elastic waistband.',
+        },
+        {
+            'name': 'Leather Bomber Jacket',
+            'sku': 'JK-BOMBER-001',
+            'category': 'Jackets',
+            'supplier': 'premium_materials',
+            'cost_price': '85.00',
+            'selling_price': '179.99',
+            'description': 'Classic bomber jacket made from premium leather. Features ribbed cuffs and hem, front zip closure, and multiple pockets.',
+        },
+        {
+            'name': 'Wool Cable Knit Sweater',
+            'sku': 'SW-CABLE-001',
+            'category': 'Sweaters',
+            'supplier': 'eco_fabrics',
+            'cost_price': '32.50',
+            'selling_price': '69.99',
+            'description': 'Warm cable knit sweater made from soft wool blend. Perfect for staying cozy during colder months.',
+        },
+        {
+            'name': 'Leather Belt',
+            'sku': 'AC-BELT-001',
+            'category': 'Accessories',
+            'supplier': 'premium_materials',
+            'cost_price': '12.25',
+            'selling_price': '29.99',
+            'description': 'Classic leather belt with metal buckle. Made from genuine leather for durability and style.',
+        },
+        {
+            'name': 'Canvas Sneakers',
+            'sku': 'SH-CANVAS-001',
+            'category': 'Shoes',
+            'supplier': 'textile_experts',
+            'cost_price': '15.75',
+            'selling_price': '34.99',
+            'description': 'Comfortable canvas sneakers with rubber sole. Perfect for casual everyday wear.',
+        },
+        {
+            'name': 'Graphic Print T-Shirt',
+            'sku': 'TS-GRAPHIC-001',
+            'category': 'T-Shirts',
+            'supplier': 'fashion_wholesale',
+            'cost_price': '10.50',
+            'selling_price': '24.99',
+            'description': 'Eye-catching graphic print t-shirt. Made from soft cotton blend with a relaxed fit.',
+        },
+        {
+            'name': 'Distressed Denim Jeans',
+            'sku': 'JN-DISTRESS-001',
+            'category': 'Jeans',
+            'supplier': 'fashion_wholesale',
+            'cost_price': '25.00',
+            'selling_price': '54.99',
+            'description': 'Trendy distressed jeans with a modern fit. Features authentic worn-in details and comfortable stretch fabric.',
+        },
+        {
+            'name': 'Maxi Wrap Dress',
+            'sku': 'DR-MAXI-001',
+            'category': 'Dresses',
+            'supplier': 'eco_fabrics',
+            'cost_price': '27.50',
+            'selling_price': '59.99',
+            'description': 'Elegant maxi wrap dress perfect for any occasion. Features a flattering silhouette and tie closure.',
+        }
+    ]
+    
+    for product_data in sample_products:
+        category_name = product_data.pop('category')
+        supplier_key = product_data.pop('supplier')
+        
+        # Convert string prices to Decimal
+        product_data['cost_price'] = Decimal(product_data['cost_price'])
+        product_data['selling_price'] = Decimal(product_data['selling_price'])
+        
+        # Check if product already exists
+        if not Product.objects.filter(sku=product_data['sku']).exists():
+            # Create the product
+            product = Product.objects.create(
+                category=categories[category_name],
+                supplier=suppliers[supplier_key],
+                **product_data
+            )
+            
+            # Add a dummy product image
+            ProductImage.objects.create(
+                product=product,
+                image='products/placeholder.jpg',
+                is_primary=True
+            )
+
+
+def add_sample_variants(apps, schema_editor):
+    # Get the models
+    Product = apps.get_model('products', 'Product')
+    Size = apps.get_model('inventory', 'Size')
+    Color = apps.get_model('inventory', 'Color')
+    ProductVariant = apps.get_model('inventory', 'ProductVariant')
+    InventoryAdjustment = apps.get_model('inventory', 'InventoryAdjustment')
+    
+    # Get the sizes and colors
+    sizes = {size.name: size for size in Size.objects.all()}
+    colors = {color.name: color for color in Color.objects.all()}
+    
+    # For each product, create variants
+    for product in Product.objects.all():
+        # Determine which sizes and colors to use based on product category
+        product_sizes = []
+        product_colors = []
+        
+        if product.category.name == 'T-Shirts' or product.category.name == 'Sweaters':
+            product_sizes = ['S', 'M', 'L', 'XL']
+            product_colors = ['Black', 'White', 'Blue', 'Red', 'Gray']
+        elif product.category.name == 'Jeans':
+            product_sizes = ['S', 'M', 'L', 'XL']
+            product_colors = ['Blue', 'Black', 'Gray']
+        elif product.category.name == 'Dresses':
+            product_sizes = ['S', 'M', 'L']
+            product_colors = ['Black', 'Red', 'Blue', 'Green', 'Pink']
+        elif product.category.name == 'Jackets':
+            product_sizes = ['M', 'L', 'XL']
+            product_colors = ['Black', 'Brown', 'Blue']
+        elif product.category.name == 'Accessories':
+            product_sizes = ['S', 'M', 'L']
+            product_colors = ['Black', 'Brown']
+        elif product.category.name == 'Shoes':
+            product_sizes = ['S', 'M', 'L', 'XL']
+            product_colors = ['Black', 'White', 'Blue', 'Red']
+        else:
+            # Default sizes and colors for other categories
+            product_sizes = ['S', 'M', 'L']
+            product_colors = ['Black', 'White', 'Blue']
+        
+        # Create variants for each size-color combination
+        for size_name in product_sizes:
+            for color_name in product_colors:
+                # Skip if variant already exists
+                if ProductVariant.objects.filter(
+                    product=product,
+                    size=sizes[size_name],
+                    color=colors[color_name]
+                ).exists():
+                    continue
+                
+                # Generate random stock quantity between 5 and 30
+                import random
+                quantity = random.randint(5, 30)
+                
+                # Create the variant
+                variant = ProductVariant.objects.create(
+                    product=product,
+                    size=sizes[size_name],
+                    color=colors[color_name],
+                    quantity=quantity,
+                    reorder_level=5
+                )
+                
+                # Create inventory adjustment record
+                InventoryAdjustment.objects.create(
+                    variant=variant,
+                    adjustment_type='incoming',
+                    quantity=quantity,
+                    notes=f'Initial inventory for {product.name} - {size_name}/{color_name}'
+                )
+
+
+def remove_sample_data(apps, schema_editor):
+    # Get models
+    Product = apps.get_model('products', 'Product')
+    Supplier = apps.get_model('suppliers', 'Supplier')
+    
+    # Sample SKUs and supplier names to remove
+    sample_skus = [
+        'TS-CLASSIC-001',
+        'JN-SLIM-001',
+        'DR-FLORAL-001',
+        'JK-BOMBER-001',
+        'SW-CABLE-001',
+        'AC-BELT-001',
+        'SH-CANVAS-001',
+        'TS-GRAPHIC-001',
+        'JN-DISTRESS-001',
+        'DR-MAXI-001'
+    ]
+    
+    sample_suppliers = [
+        'Textile Experts Co.',
+        'Fashion Wholesale Ltd.',
+        'Eco-Friendly Fabrics',
+        'Premium Materials Inc.'
+    ]
+    
+    # Delete products and suppliers
+    Product.objects.filter(sku__in=sample_skus).delete()
+    Supplier.objects.filter(name__in=sample_suppliers).delete()
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('products', '0002_add_default_categories'),
+        ('inventory', '0002_add_default_sizes_colors'),
+        ('suppliers', '0001_initial'),
+    ]
+
+    operations = [
+        migrations.RunPython(
+            add_sample_products,
+            remove_sample_data
+        ),
+        migrations.RunPython(
+            add_sample_variants,
+            remove_sample_data
+        ),
+    ]

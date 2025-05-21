@@ -1,0 +1,65 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}Categories - Spectre Clothing{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800">Product Categories</h1>
+        <a href="{% url 'products:category_add' %}" 
+           class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
+            <i class="fas fa-plus mr-2"></i> Add Category
+        </a>
+    </div>
+    
+    <div class="mb-4">
+        <a href="{% url 'products:product_list' %}" class="text-indigo-600 hover:underline">
+            <i class="fas fa-arrow-left mr-1"></i> Back to Products
+        </a>
+    </div>
+    
+    {% if categories %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+                <tr>
+                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
+                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>
+                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for category in categories %}
+                <tr>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="font-medium">{{ category.name }}</span>
+                    </td>
+                    <td class="px-4 py-3">{{ category.description|default:"-"|truncatechars:100 }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <a href="{% url 'products:product_list' %}?category={{ category.id }}" class="text-indigo-600 hover:underline">
+                            {{ category.products.count }} products
+                        </a>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex space-x-2">
+                            <a href="{% url 'products:category_edit' category.id %}" class="text-indigo-600 hover:text-indigo-900">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'products:category_delete' category.id %}" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="bg-gray-50 p-6 rounded-md text-center">
+        <p class="text-gray-500 mb-4">No categories have been added yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

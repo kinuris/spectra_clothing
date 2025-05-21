@@ -1,0 +1,36 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}
+{% if size %}Edit Size{% else %}Add Size{% endif %} - Spectre Clothing
+{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800">
+            {% if size %}Edit Size{% else %}Add New Size{% endif %}
+        </h1>
+    </div>
+    
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Size Name*</label>
+            <input type="text" name="name" id="name" required 
+                   value="{{ size.name|default:'' }}" 
+                   class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   placeholder="e.g., S, M, L, XL, XXL">
+        </div>
+        
+        <div class="flex justify-end space-x-3">
+            <a href="{% url 'inventory:size_list' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-md transition duration-200">
+                Cancel
+            </a>
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
+                {% if size %}Save Changes{% else %}Add Size{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

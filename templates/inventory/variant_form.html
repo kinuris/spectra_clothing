@@ -1,0 +1,79 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}
+{% if variant %}Edit Variant{% else %}Add New Variant{% endif %} - Spectre Clothing
+{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800">
+            {% if variant %}Edit Variant{% else %}Add New Variant{% endif %}
+        </h1>
+    </div>
+    
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        {% if not variant %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="product" class="block text-sm font-medium text-gray-700 mb-1">Product*</label>
+                <select name="product" id="product" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Select Product</option>
+                    {% for product in products %}
+                    <option value="{{ product.id }}">{{ product.name }} (SKU: {{ product.sku }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <label for="size" class="block text-sm font-medium text-gray-700 mb-1">Size*</label>
+                <select name="size" id="size" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Select Size</option>
+                    {% for size in sizes %}
+                    <option value="{{ size.id }}">{{ size.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <label for="color" class="block text-sm font-medium text-gray-700 mb-1">Color*</label>
+                <select name="color" id="color" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Select Color</option>
+                    {% for color in colors %}
+                    <option value="{{ color.id }}">{{ color.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Initial Quantity</label>
+                <input type="number" name="quantity" id="quantity" min="0" value="0" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+        </div>
+        {% endif %}
+        
+        <div>
+            <label for="reorder_level" class="block text-sm font-medium text-gray-700 mb-1">Reorder Level</label>
+            <input type="number" name="reorder_level" id="reorder_level" min="1" value="{{ variant.reorder_level|default:5 }}" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <p class="mt-1 text-sm text-gray-500">The stock level at which a notification will be triggered to reorder this item.</p>
+        </div>
+        
+        <div class="flex justify-end space-x-3">
+            {% if variant %}
+            <a href="{% url 'inventory:variant_detail' variant.id %}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-md transition duration-200">
+                Cancel
+            </a>
+            {% else %}
+            <a href="{% url 'inventory:variant_list' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-md transition duration-200">
+                Cancel
+            </a>
+            {% endif %}
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
+                {% if variant %}Save Changes{% else %}Create Variant{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

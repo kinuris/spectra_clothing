@@ -1,0 +1,103 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}Generate Report - Spectre Clothing{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="text-center mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800">Generate Sales Report</h1>
+        <p class="text-gray-600 mt-2">Create a new sales report by selecting the report type and date range</p>
+    </div>
+    
+    <div class="max-w-2xl mx-auto">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-6">
+                <label for="report_type" class="block text-sm font-medium text-gray-700 mb-1">Report Type <span class="text-red-600">*</span></label>
+                <select name="report_type" id="report_type" required
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="daily">Daily Report</option>
+                    <option value="weekly">Weekly Report</option>
+                    <option value="monthly">Monthly Report</option>
+                </select>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">Start Date <span class="text-red-600">*</span></label>
+                    <input type="date" name="date_from" id="date_from" 
+                           required
+                           class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                
+                <div>
+                    <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">End Date <span class="text-red-600">*</span></label>
+                    <input type="date" name="date_to" id="date_to" 
+                           required
+                           class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-md mb-6">
+                <h3 class="font-medium text-gray-700 mb-2">Report Details</h3>
+                <p class="text-sm text-gray-600">
+                    This report will include:
+                </p>
+                <ul class="list-disc ml-5 mt-2 text-sm text-gray-600">
+                    <li>Total sales amount for the selected period</li>
+                    <li>Total number of orders processed</li>
+                    <li>Top 5 selling products by quantity and revenue</li>
+                </ul>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <div class="text-sm">
+                    <span class="text-red-600">*</span> Required fields
+                </div>
+                <div class="flex space-x-2">
+                    <a href="{% url 'dashboard:report_list' %}" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md transition duration-200">
+                        Cancel
+                    </a>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded-md transition duration-200">
+                        Generate Report
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Date Range Validation Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateFromInput = document.getElementById('date_from');
+        const dateToInput = document.getElementById('date_to');
+        const form = dateFromInput.form;
+        
+        // Set default dates (last 30 days)
+        const today = new Date();
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(today.getDate() - 30);
+        
+        dateToInput.value = today.toISOString().split('T')[0];
+        dateFromInput.value = thirtyDaysAgo.toISOString().split('T')[0];
+        
+        // Validate dates on form submission
+        form.addEventListener('submit', function(event) {
+            const dateFrom = new Date(dateFromInput.value);
+            const dateTo = new Date(dateToInput.value);
+            
+            if (dateFrom > dateTo) {
+                event.preventDefault();
+                alert('Start date must be before or equal to end date.');
+                return false;
+            }
+            
+            return true;
+        });
+        
+        // Quick selection buttons could be added here if needed
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}Dashboard - Spectre Clothing{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-4">Dashboard</h1>
+        <p class="text-gray-600">Welcome to the Spectre Clothing Management System, {{ user.get_full_name|default:user.username }}!</p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Sales Today -->
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium opacity-80">Sales Today</p>
+                    <h3 class="text-2xl font-bold">$0.00</h3>
+                </div>
+                <div class="rounded-full bg-white bg-opacity-30 p-3">
+                    <i class="fas fa-dollar-sign text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 text-sm font-medium">
+                <span class="opacity-80">0 orders processed</span>
+            </div>
+        </div>
+
+        <!-- Pending Orders -->
+        <div class="bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-md p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium opacity-80">Pending Orders</p>
+                    <h3 class="text-2xl font-bold">0</h3>
+                </div>
+                <div class="rounded-full bg-white bg-opacity-30 p-3">
+                    <i class="fas fa-clock text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 text-sm font-medium">
+                <a href="{% url 'orders:order_list' %}?status=pending" class="text-white hover:text-amber-100">View all pending orders &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Low Stock Items -->
+        <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-lg shadow-md p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium opacity-80">Low Stock Items</p>
+                    <h3 class="text-2xl font-bold">0</h3>
+                </div>
+                <div class="rounded-full bg-white bg-opacity-30 p-3">
+                    <i class="fas fa-exclamation-circle text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 text-sm font-medium">
+                <a href="{% url 'inventory:overview' %}" class="text-white hover:text-red-100">View inventory status &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Total Products -->
+        <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg shadow-md p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium opacity-80">Total Products</p>
+                    <h3 class="text-2xl font-bold">0</h3>
+                </div>
+                <div class="rounded-full bg-white bg-opacity-30 p-3">
+                    <i class="fas fa-tshirt text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 text-sm font-medium">
+                <a href="{% url 'products:product_list' %}" class="text-white hover:text-emerald-100">Manage products &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders & Top Products -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Recent Orders -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Recent Orders</h2>
+                <a href="{% url 'orders:order_list' %}" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">View All</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-4 py-3 text-sm text-gray-500" colspan="5">No orders found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Top Selling Products -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Top Selling Products</h2>
+                <a href="{% url 'dashboard:analytics' %}" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">View Analytics</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Units Sold</th>
+                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-4 py-3 text-sm text-gray-500" colspan="4">No data available.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

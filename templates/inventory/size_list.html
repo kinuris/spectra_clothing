@@ -1,0 +1,62 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}Sizes - Spectre Clothing{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800">Size Management</h1>
+        <a href="{% url 'inventory:size_add' %}" 
+           class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
+            <i class="fas fa-plus mr-2"></i> Add Size
+        </a>
+    </div>
+    
+    <div class="mb-4 flex justify-between items-center">
+        <div>
+            <a href="{% url 'inventory:overview' %}" class="text-indigo-600 hover:underline">
+                <i class="fas fa-arrow-left mr-1"></i> Back to Inventory
+            </a>
+        </div>
+        <div class="space-x-2">
+            <a href="{% url 'inventory:color_list' %}" class="text-indigo-600 hover:underline">
+                Manage Colors <i class="fas fa-arrow-right ml-1"></i>
+            </a>
+        </div>
+    </div>
+    
+    {% if sizes %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+                <tr>
+                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size Name</th>
+                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for size in sizes %}
+                <tr>
+                    <td class="px-4 py-3 whitespace-nowrap">{{ size.name }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex space-x-2">
+                            <a href="{% url 'inventory:size_edit' size.id %}" class="text-indigo-600 hover:text-indigo-900">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'inventory:size_delete' size.id %}" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="bg-gray-50 p-6 rounded-md text-center">
+        <p class="text-gray-500 mb-4">No sizes have been added yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

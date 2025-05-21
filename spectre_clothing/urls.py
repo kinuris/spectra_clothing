@@ -15,8 +15,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.shortcuts import redirect
+
+def home_redirect(request):
+    return redirect('dashboard:dashboard')
 
 urlpatterns = [
+    path('', home_redirect, name='home'),
     path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),
+    path('products/', include('products.urls')),
+    path('inventory/', include('inventory.urls')),
+    path('orders/', include('orders.urls')),
+    path('suppliers/', include('suppliers.urls')),
+    path('dashboard/', include('dashboard.urls')),
 ]
+
+# Add media URL for development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,180 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}{{ product.name }} - Spectre Clothing{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="md:col-span-2">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-semibold text-gray-800">{{ product.name }}</h1>
+                <div class="flex space-x-2">
+                    <a href="{% url 'products:product_edit' product.id %}" 
+                       class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
+                        <i class="fas fa-edit mr-2"></i> Edit
+                    </a>
+                    <a href="{% url 'products:product_delete' product.id %}" 
+                       class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md transition duration-200">
+                        <i class="fas fa-trash-alt mr-2"></i> Delete
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Product Images -->
+            <div class="mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% if product.images.exists %}
+                        {% with product.images.first as primary_image %}
+                        <div class="md:col-span-2 h-64 overflow-hidden rounded-lg bg-gray-100">
+                            <img src="{{ primary_image.image.url }}" alt="{{ product.name }}" class="object-contain w-full h-full">
+                        </div>
+                        {% endwith %}
+                        
+                        {% if product.images.count > 1 %}
+                        <div class="md:col-span-2 flex space-x-2 overflow-x-auto">
+                            {% for image in product.images.all %}
+                            <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
+                                <img src="{{ image.image.url }}" alt="{{ product.name }}" class="object-cover w-full h-full">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="md:col-span-2 h-64 flex items-center justify-center rounded-lg bg-gray-100">
+                            <div class="text-gray-400 text-center">
+                                <i class="fas fa-image text-6xl"></i>
+                                <p class="mt-2">No images available</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Product Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <dl>
+                        <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt class="text-sm font-medium text-gray-500">SKU</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ product.sku }}</dd>
+                        </div>
+                        <div class="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt class="text-sm font-medium text-gray-500">Category</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <a href="{% url 'products:product_list' %}?category={{ product.category.id }}" class="text-indigo-600 hover:underline">
+                                    {{ product.category.name }}
+                                </a>
+                            </dd>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt class="text-sm font-medium text-gray-500">Cost Price</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">${{ product.cost_price }}</dd>
+                        </div>
+                        <div class="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt class="text-sm font-medium text-gray-500">Selling Price</dt>
+                            <dd class="mt-1 text-sm font-bold text-indigo-600 sm:mt-0 sm:col-span-2">${{ product.selling_price }}</dd>
+                        </div>
+                    </dl>
+                </div>
+                
+                <div>
+                    <dl>
+                        {% if product.supplier %}
+                        <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt class="text-sm font-medium text-gray-500">Supplier</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <a href="{% url 'suppliers:supplier_detail' product.supplier.id %}" class="text-indigo-600 hover:underline">
+                                    {{ product.supplier.name }}
+                                </a>
+                            </dd>
+                        </div>
+                        {% endif %}
+                        <div class="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt class="text-sm font-medium text-gray-500">Created</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ product.created_at|date:"M d, Y" }}</dd>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ product.updated_at|date:"M d, Y H:i" }}</dd>
+                        </div>
+                        <div class="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt class="text-sm font-medium text-gray-500">Actions</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <a href="{% url 'inventory:variant_add' %}?product={{ product.id }}" class="text-indigo-600 hover:underline">
+                                    <i class="fas fa-plus-circle mr-1"></i> Add Variant
+                                </a>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+            
+            <!-- Product Description -->
+            <div class="mt-6">
+                <h2 class="text-lg font-medium text-gray-900 mb-2">Description</h2>
+                <div class="bg-gray-50 p-4 rounded-md">
+                    <p class="text-gray-700">{{ product.description|default:"No description provided."|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Variants Summary Card -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-lg font-medium text-gray-900 mb-4">
+            Product Variants 
+            <span class="text-sm font-normal text-gray-500">({{ variants|length }})</span>
+        </h2>
+        
+        {% if variants %}
+        <div class="space-y-4">
+            {% for variant in variants %}
+            <div class="border rounded-md p-3 {% if variant.is_low_stock %}bg-yellow-50 border-yellow-200{% elif variant.quantity == 0 %}bg-red-50 border-red-200{% else %}bg-green-50 border-green-200{% endif %}">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">{{ variant.size.name }} / 
+                            <span class="flex items-center">
+                                {% if variant.color.color_code %}
+                                <span class="h-3 w-3 rounded-full mr-1" style="background-color: {{ variant.color.color_code }};"></span>
+                                {% endif %}
+                                {{ variant.color.name }}
+                            </span>
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            Stock: 
+                            <span class="font-medium {% if variant.quantity == 0 %}text-red-600{% elif variant.is_low_stock %}text-yellow-600{% else %}text-green-600{% endif %}">
+                                {{ variant.quantity }}
+                            </span>
+                        </p>
+                        {% if variant.is_low_stock and variant.quantity > 0 %}
+                        <p class="text-xs text-yellow-600">Low stock (below {{ variant.reorder_level }})</p>
+                        {% elif variant.quantity == 0 %}
+                        <p class="text-xs text-red-600">Out of stock</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <a href="{% url 'inventory:variant_detail' variant.id %}" class="text-indigo-600 hover:underline text-sm">
+                            <i class="fas fa-eye mr-1"></i> Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-4 text-center">
+            <a href="{% url 'inventory:variant_add' %}?product={{ product.id }}" class="inline-block text-indigo-600 hover:underline">
+                <i class="fas fa-plus-circle mr-1"></i> Add New Variant
+            </a>
+        </div>
+        {% else %}
+        <div class="bg-gray-50 p-4 rounded-md text-center">
+            <p class="text-gray-500 mb-4">No variants have been added yet.</p>
+            <a href="{% url 'inventory:variant_add' %}?product={{ product.id }}" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
+                <i class="fas fa-plus mr-2"></i> Add First Variant
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
