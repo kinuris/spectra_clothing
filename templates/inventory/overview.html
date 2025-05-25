@@ -3,7 +3,7 @@
 {% block title %}Inventory Overview - Spectre Clothing{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"> <!-- Increased mb-8 -->
     <!-- Total Variants Card -->
     <div class="bg-white p-6 rounded-lg shadow-md">
         <div class="flex items-center">
@@ -11,8 +11,8 @@
                 <i class="fas fa-boxes text-xl"></i>
             </div>
             <div>
-                <h2 class="text-sm font-medium text-gray-600">Total Product Variants</h2>
-                <p class="text-2xl font-bold">{{ total_variants }}</p>
+                <h2 class="text-sm font-medium text-gray-500">Total Product Variants</h2>
+                <p class="text-3xl font-bold text-gray-800">{{ total_variants }}</p> <!-- Slightly larger number -->
             </div>
         </div>
     </div>
@@ -24,9 +24,9 @@
                 <i class="fas fa-exclamation-triangle text-xl"></i>
             </div>
             <div>
-                <h2 class="text-sm font-medium text-gray-600">Low Stock Items</h2>
-                <p class="text-2xl font-bold">{{ low_stock_variants }}</p>
-                <a href="{% url 'inventory:variant_list' %}?stock_level=low" class="text-xs text-indigo-600 hover:underline">View all</a>
+                <h2 class="text-sm font-medium text-gray-500">Low Stock Items</h2>
+                <p class="text-3xl font-bold text-gray-800">{{ low_stock_variants }}</p>
+                <a href="{% url 'inventory:variant_list' %}?stock_level=low" class="text-xs text-indigo-600 hover:text-indigo-800 hover:underline mt-1 inline-block">View all</a>
             </div>
         </div>
     </div>
@@ -38,102 +38,106 @@
                 <i class="fas fa-times-circle text-xl"></i>
             </div>
             <div>
-                <h2 class="text-sm font-medium text-gray-600">Out of Stock Items</h2>
-                <p class="text-2xl font-bold">{{ out_of_stock_variants }}</p>
-                <a href="{% url 'inventory:variant_list' %}?stock_level=out" class="text-xs text-indigo-600 hover:underline">View all</a>
+                <h2 class="text-sm font-medium text-gray-500">Out of Stock Items</h2>
+                <p class="text-3xl font-bold text-gray-800">{{ out_of_stock_variants }}</p>
+                <a href="{% url 'inventory:variant_list' %}?stock_level=out" class="text-xs text-indigo-600 hover:text-indigo-800 hover:underline mt-1 inline-block">View all</a>
             </div>
         </div>
     </div>
 </div>
 
-<div class="bg-white p-6 rounded-lg shadow-md mb-6">
+<div class="bg-white p-6 rounded-lg shadow-md mb-8"> <!-- Increased mb-8 -->
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-semibold text-gray-800">Quick Actions</h2>
+        <h2 class="text-lg font-semibold text-gray-700">Quick Actions</h2> <!-- Slightly adjusted heading -->
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <a href="{% url 'inventory:variant_list' %}" class="bg-indigo-50 hover:bg-indigo-100 p-4 rounded-lg text-center transition duration-200">
-            <i class="fas fa-list text-indigo-600 text-xl mb-2"></i>
-            <h3 class="font-medium">View All Variants</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5"> <!-- Adjusted gap -->
+        <a href="{% url 'inventory:variant_list' %}" class="bg-indigo-50 hover:bg-indigo-100 p-5 rounded-lg text-center transition-colors duration-200 ease-in-out flex flex-col items-center justify-center group">
+            <i class="fas fa-list text-indigo-500 group-hover:text-indigo-600 text-2xl mb-2.5 transition-colors duration-200 ease-in-out"></i>
+            <h3 class="text-sm font-medium text-gray-700 group-hover:text-indigo-700 transition-colors duration-200 ease-in-out">View All Variants</h3>
         </a>
         
-        <a href="{% url 'inventory:variant_add' %}" class="bg-green-50 hover:bg-green-100 p-4 rounded-lg text-center transition duration-200">
-            <i class="fas fa-plus-circle text-green-600 text-xl mb-2"></i>
-            <h3 class="font-medium">Add New Variant</h3>
+        <a href="{% url 'inventory:variant_add' %}" class="bg-green-50 hover:bg-green-100 p-5 rounded-lg text-center transition-colors duration-200 ease-in-out flex flex-col items-center justify-center group">
+            <i class="fas fa-plus-circle text-green-500 group-hover:text-green-600 text-2xl mb-2.5 transition-colors duration-200 ease-in-out"></i>
+            <h3 class="text-sm font-medium text-gray-700 group-hover:text-green-700 transition-colors duration-200 ease-in-out">Add New Variant</h3>
         </a>
         
-        <a href="{% url 'inventory:adjustment_add' %}" class="bg-blue-50 hover:bg-blue-100 p-4 rounded-lg text-center transition duration-200">
-            <i class="fas fa-exchange-alt text-blue-600 text-xl mb-2"></i>
-            <h3 class="font-medium">Record Adjustment</h3>
+        <a href="{% url 'inventory:adjustment_add' %}" class="bg-blue-50 hover:bg-blue-100 p-5 rounded-lg text-center transition-colors duration-200 ease-in-out flex flex-col items-center justify-center group">
+            <i class="fas fa-exchange-alt text-blue-500 group-hover:text-blue-600 text-2xl mb-2.5 transition-colors duration-200 ease-in-out"></i>
+            <h3 class="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors duration-200 ease-in-out">Record Adjustment</h3>
         </a>
         
-        <a href="{% url 'inventory:adjustment_list' %}" class="bg-purple-50 hover:bg-purple-100 p-4 rounded-lg text-center transition duration-200">
-            <i class="fas fa-history text-purple-600 text-xl mb-2"></i>
-            <h3 class="font-medium">View Adjustment History</h3>
+        <a href="{% url 'inventory:adjustment_list' %}" class="bg-purple-50 hover:bg-purple-100 p-5 rounded-lg text-center transition-colors duration-200 ease-in-out flex flex-col items-center justify-center group">
+            <i class="fas fa-history text-purple-500 group-hover:text-purple-600 text-2xl mb-2.5 transition-colors duration-200 ease-in-out"></i>
+            <h3 class="text-sm font-medium text-gray-700 group-hover:text-purple-700 transition-colors duration-200 ease-in-out">View Adjustment History</h3>
         </a>
     </div>
 </div>
 
 <div class="bg-white p-6 rounded-lg shadow-md">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-semibold text-gray-800">Recent Inventory Adjustments</h2>
-        <a href="{% url 'inventory:adjustment_list' %}" class="text-indigo-600 hover:underline">View All</a>
+        <h2 class="text-lg font-semibold text-gray-700">Recent Inventory Adjustments</h2> <!-- Slightly adjusted heading -->
+        <a href="{% url 'inventory:adjustment_list' %}" class="text-sm text-indigo-600 hover:text-indigo-800 hover:underline">View All</a>
     </div>
     
     {% if recent_adjustments %}
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
-            <thead>
+            <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">By User</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">By User</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 {% for adjustment in recent_adjustments %}
                 <tr>
-                    <td class="px-4 py-3 whitespace-nowrap">{{ adjustment.created_at|date:"M d, Y H:i" }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap">
-                        <a href="{% url 'inventory:variant_detail' adjustment.variant.id %}" class="text-indigo-600 hover:underline">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ adjustment.created_at|date:"M d, Y H:i" }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+                        <a href="{% url 'inventory:variant_detail' adjustment.variant.id %}" class="text-indigo-600 hover:text-indigo-800 hover:underline">
                             {{ adjustment.variant }}
                         </a>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap">
+                    <td class="px-6 py-4 whitespace-nowrap">
                         {% if adjustment.adjustment_type == 'incoming' %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                 {{ adjustment.get_adjustment_type_display }}
                             </span>
                         {% elif adjustment.adjustment_type == 'outgoing' %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                 {{ adjustment.get_adjustment_type_display }}
                             </span>
                         {% else %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                            <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                 {{ adjustment.get_adjustment_type_display }}
                             </span>
                         {% endif %}
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
                         {% if adjustment.adjustment_type == 'incoming' %}
-                            <span class="text-green-600">+{{ adjustment.quantity }}</span>
+                            <span class="font-semibold text-green-700">+{{ adjustment.quantity }}</span>
                         {% elif adjustment.adjustment_type == 'outgoing' %}
-                            <span class="text-red-600">-{{ adjustment.quantity }}</span>
+                            <span class="font-semibold text-red-700">-{{ adjustment.quantity }}</span>
                         {% else %}
-                            <span class="text-yellow-600">{{ adjustment.quantity }}</span>
+                            <span class="font-semibold text-yellow-700">{{ adjustment.quantity }}</span>
                         {% endif %}
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap">{{ adjustment.created_by.get_full_name|default:adjustment.created_by.username }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ adjustment.created_by.get_full_name|default:adjustment.created_by.username }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
     {% else %}
-    <div class="bg-gray-50 p-6 rounded-md text-center">
-        <p class="text-gray-500">No recent inventory adjustments found.</p>
+    <div class="bg-gray-50 p-8 rounded-md text-center">
+        <div class="flex justify-center mb-4">
+            <i class="fas fa-boxes text-4xl text-gray-400"></i>
+        </div>
+        <p class="text-gray-600 text-base font-medium">No recent inventory adjustments found.</p>
+        <p class="text-gray-400 text-sm mt-1">When you make adjustments, they will appear here.</p>
     </div>
     {% endif %}
 </div>

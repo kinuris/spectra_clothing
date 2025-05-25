@@ -3,21 +3,21 @@
 {% block title %}Product Variants - Spectre Clothing{% endblock %}
 
 {% block content %}
-<div class="bg-white p-6 rounded-lg shadow-md">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">Product Variants</h1>
+<div class="bg-white p-8 rounded-lg shadow-lg">
+    <div class="flex justify-between items-center pb-6 mb-6 border-b border-gray-200">
+        <h1 class="text-3xl font-semibold text-gray-900">Product Variants</h1>
         <a href="{% url 'inventory:variant_add' %}" 
-           class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
-            <i class="fas fa-plus mr-2"></i> Add Variant
+           class="bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-5 rounded-md shadow-sm transition duration-200 text-sm font-medium flex items-center">
+            <i class="fas fa-plus mr-2"></i> Add New Variant
         </a>
     </div>
 
     <!-- Filter Form -->
-    <div class="mb-6 bg-gray-50 p-4 rounded-md">
-        <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="mb-8 bg-gray-100 p-6 rounded-lg border border-gray-200">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
             <div>
                 <label for="product" class="block text-sm font-medium text-gray-700 mb-1">Filter by Product</label>
-                <select name="product" id="product" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <select name="product" id="product" class="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">All Products</option>
                     {% for product in products %}
                     <option value="{{ product.id }}" {% if selected_product == product.id|stringformat:"s" %}selected{% endif %}>
@@ -29,18 +29,18 @@
             
             <div>
                 <label for="stock_level" class="block text-sm font-medium text-gray-700 mb-1">Filter by Stock Level</label>
-                <select name="stock_level" id="stock_level" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <select name="stock_level" id="stock_level" class="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">All Stock Levels</option>
                     <option value="low" {% if selected_stock_level == 'low' %}selected{% endif %}>Low Stock</option>
                     <option value="out" {% if selected_stock_level == 'out' %}selected{% endif %}>Out of Stock</option>
                 </select>
             </div>
             
-            <div class="flex items-end">
-                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-200">
+            <div class="flex items-center space-x-3">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-md shadow-sm transition duration-200 text-sm font-medium">
                     Apply Filters
                 </button>
-                <a href="{% url 'inventory:variant_list' %}" class="ml-2 text-indigo-600 hover:underline">
+                <a href="{% url 'inventory:variant_list' %}" class="text-sm text-gray-600 hover:text-indigo-600 hover:underline">
                     Clear Filters
                 </a>
             </div>
@@ -48,61 +48,61 @@
     </div>
     
     {% if variants %}
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto border border-gray-200 rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
-            <thead>
+            <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Product</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Size</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Color</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Quantity</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 {% for variant in variants %}
                 <tr>
-                    <td class="px-4 py-3 whitespace-nowrap">
-                        <a href="{% url 'products:product_detail' variant.product.id %}" class="text-indigo-600 hover:underline font-medium">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                        <a href="{% url 'products:product_detail' variant.product.id %}" class="text-indigo-600 hover:text-indigo-800 hover:underline font-medium">
                             {{ variant.product.name }}
                         </a>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap">{{ variant.size.name }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ variant.size.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         <div class="flex items-center">
                             {% if variant.color.color_code %}
-                            <span class="h-4 w-4 rounded-full mr-2" style="background-color: {{ variant.color.color_code }};"></span>
+                            <span class="h-4 w-4 rounded-full mr-2 border border-gray-300" style="background-color: {{ variant.color.color_code }};"></span>
                             {% endif %}
                             {{ variant.color.name }}
                         </div>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap">{{ variant.quantity }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ variant.quantity }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
                         {% if variant.quantity == 0 %}
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                        <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                             Out of Stock
                         </span>
                         {% elif variant.is_low_stock %}
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                             Low Stock
                         </span>
                         {% else %}
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                             In Stock
                         </span>
                         {% endif %}
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap">
-                        <div class="flex space-x-2">
-                            <a href="{% url 'inventory:variant_detail' variant.id %}" class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i> View
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <div class="flex space-x-3 items-center">
+                            <a href="{% url 'inventory:variant_detail' variant.id %}" class="text-blue-600 hover:text-blue-800 flex items-center space-x-1 group">
+                                <i class="fas fa-eye fa-fw text-gray-400 group-hover:text-blue-700"></i> <span class="group-hover:underline">View</span>
                             </a>
-                            <a href="{% url 'inventory:variant_edit' variant.id %}" class="text-indigo-600 hover:text-indigo-900">
-                                <i class="fas fa-edit"></i> Edit
+                            <a href="{% url 'inventory:variant_edit' variant.id %}" class="text-indigo-600 hover:text-indigo-800 flex items-center space-x-1 group">
+                                <i class="fas fa-edit fa-fw text-gray-400 group-hover:text-indigo-700"></i> <span class="group-hover:underline">Edit</span>
                             </a>
-                            <a href="{% url 'inventory:variant_delete' variant.id %}" class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash-alt"></i> Delete
+                            <a href="{% url 'inventory:variant_delete' variant.id %}" class="text-red-600 hover:text-red-800 flex items-center space-x-1 group">
+                                <i class="fas fa-trash-alt fa-fw text-gray-400 group-hover:text-red-700"></i> <span class="group-hover:underline">Delete</span>
                             </a>
                         </div>
                     </td>
@@ -112,13 +112,22 @@
         </table>
     </div>
     {% else %}
-    <div class="bg-gray-50 p-6 rounded-md text-center">
-        <p class="text-gray-500 mb-4">No product variants found.</p>
+    <div class="bg-gray-50 p-8 rounded-lg text-center border border-gray-200">
+        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+        </svg>
+        <p class="text-lg font-medium text-gray-700 mb-2">No product variants found.</p>
         {% if selected_product or selected_stock_level %}
-        <p>
-            <a href="{% url 'inventory:variant_list' %}" class="text-indigo-600 hover:underline">
-                Clear filters and show all variants
+        <p class="text-sm text-gray-500">
+            Try adjusting your filters or 
+            <a href="{% url 'inventory:variant_list' %}" class="text-indigo-600 hover:text-indigo-800 font-medium hover:underline">
+                clear all filters
             </a>
+            to see all variants.
+        </p>
+        {% else %}
+        <p class="text-sm text-gray-500">
+            You can add new product variants using the button above.
         </p>
         {% endif %}
     </div>

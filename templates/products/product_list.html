@@ -3,110 +3,129 @@
 {% block title %}Products - Spectre Clothing{% endblock %}
 
 {% block content %}
-<div class="bg-white p-6 rounded-lg shadow-md">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">Products</h1>
-        <a href="{% url 'products:product_add' %}" 
-           class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
-            <i class="fas fa-plus mr-2"></i> Add Product
-        </a>
-    </div>
-
-    <!-- Filter and Search Form -->
-    <div class="mb-6 bg-gray-50 p-4 rounded-md">
-        <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-                <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Filter by Category</label>
-                <select name="category" id="category" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option value="">All Categories</option>
-                    {% for category in categories %}
-                    <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
-                        {{ category.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            
-            <div>
-                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search Products</label>
-                <input type="text" name="search" id="search" 
-                       value="{{ search_query|default:'' }}" 
-                       placeholder="Search by name or SKU" 
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
-            
-            <div class="flex items-end">
-                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-200">
-                    Search
-                </button>
-                <a href="{% url 'products:product_list' %}" class="ml-2 text-indigo-600 hover:underline">
-                    Clear Filters
-                </a>
-            </div>
-        </form>
-    </div>
-    
-    <!-- Quick Links -->
-    <div class="mb-6 flex space-x-2">
-        <a href="{% url 'products:category_list' %}" class="text-indigo-600 hover:underline">
-            <i class="fas fa-tags mr-1"></i> Manage Categories
-        </a>
-    </div>
-    
-    {% if products %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for product in products %}
-        <div class="bg-white border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
-            <div class="h-48 overflow-hidden bg-gray-100 flex items-center justify-center">
-                {% if product.images.exists %}
-                    {% with product.images.first as image %}
-                    <img src="{{ image.image.url }}" alt="{{ product.name }}" class="object-cover w-full h-full">
-                    {% endwith %}
-                {% else %}
-                    <div class="text-gray-400 text-center">
-                        <i class="fas fa-image text-4xl"></i>
-                        <p class="mt-2">No image</p>
-                    </div>
-                {% endif %}
-            </div>
-            <div class="p-4">
-                <div class="flex justify-between items-start">
-                    <h2 class="text-lg font-semibold">
-                        <a href="{% url 'products:product_detail' product.id %}" class="text-gray-800 hover:text-indigo-600">
-                            {{ product.name }}
-                        </a>
-                    </h2>
-                    <span class="text-gray-500 text-sm">SKU: {{ product.sku }}</span>
-                </div>
-                <p class="text-sm text-gray-600 mt-1">{{ product.category.name }}</p>
-                <div class="mt-2 flex justify-between items-center">
-                    <div>
-                        <span class="text-lg font-bold text-indigo-600">${{ product.selling_price }}</span>
-                    </div>
-                    <div class="flex space-x-2">
-                        <a href="{% url 'products:product_edit' product.id %}" class="text-indigo-600 hover:text-indigo-900">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="{% url 'products:product_delete' product.id %}" class="text-red-600 hover:text-red-900">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="bg-gray-50 p-6 rounded-md text-center">
-        <p class="text-gray-500 mb-4">No products found.</p>
-        {% if search_query or selected_category %}
-        <p>
-            <a href="{% url 'products:product_list' %}" class="text-indigo-600 hover:underline">
-                Clear filters and show all products
+<main class="container mx-auto py-8 px-4">
+    <div class="bg-white p-6 md:p-8 rounded-lg shadow-xl">
+        
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">Our Products</h1>
+            <a href="{% url 'products:product_add' %}" 
+               class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-0.5">
+                <i class="fas fa-plus mr-2"></i> Add New Product
             </a>
-        </p>
+        </header>
+
+        <!-- Filter and Search Form -->
+        <section aria-label="Product Filters and Search" class="mb-8 bg-gray-50 p-6 rounded-lg shadow">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                <div>
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Filter by Category</label>
+                    <select name="category" id="category" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 py-2 px-3">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search Products</label>
+                    <input type="text" name="search" id="search" 
+                           value="{{ search_query|default:'' }}" 
+                           placeholder="Search by name or SKU" 
+                           class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 py-2 px-3">
+                </div>
+                
+                <div class="flex space-x-3">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-0.5 flex items-center">
+                        <i class="fas fa-search mr-2"></i> Search
+                    </button>
+                    <a href="{% url 'products:product_list' %}" class="text-gray-600 hover:text-indigo-600 transition duration-200 py-2.5 px-4 rounded-md hover:bg-gray-100">
+                        Clear Filters
+                    </a>
+                </div>
+            </form>
+        </section>
+        
+        <!-- Quick Links / Management -->
+        <div class="mb-8 flex justify-end">
+            <a href="{% url 'products:category_list' %}" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium py-2 px-4 rounded-lg hover:bg-indigo-50 transition-all duration-200">
+                <i class="fas fa-tags mr-2"></i> Manage Categories
+            </a>
+        </div>
+        
+        {% if products %}
+        <section aria-label="Product Listing">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {% for product in products %}
+                <article class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out flex flex-col transform hover:-translate-y-1">
+                    {# For aspect-w-1 aspect-h-1, ensure you have @tailwindcss/aspect-ratio plugin #}
+                    {# If not, replace with a fixed height like h-56 or h-64 and adjust img classes #}
+                    <figure class="aspect-w-1 aspect-h-1 w-full bg-gray-100">
+                        {% if product.images.exists %}
+                            {% with product.images.first as image %}
+                            <img src="{{ image.image.url }}" alt="{{ product.name }}" class="object-cover w-full h-full">
+                            {% endwith %}
+                        {% else %}
+                            <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 p-4">
+                                <i class="fas fa-image text-5xl"></i>
+                                <p class="mt-2 text-sm text-center">No image available</p>
+                            </div>
+                        {% endif %}
+                    </figure>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <header class="mb-2">
+                            <h2 class="text-xl font-semibold text-gray-800">
+                                <a href="{% url 'products:product_detail' product.id %}" class="hover:text-indigo-600 transition duration-200">
+                                    {{ product.name }}
+                                </a>
+                            </h2>
+                            <p class="text-xs text-gray-500 mt-1">SKU: {{ product.sku }}</p>
+                        </header>
+                        <p class="text-sm text-gray-600 mb-3">{{ product.category.name }}</p>
+                        
+                        <div class="mt-auto">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-2xl font-bold text-indigo-700">${{ product.selling_price|floatformat:2 }}</span>
+                            </div>
+                            <div class="flex space-x-2 border-t border-gray-100 pt-4">
+                                <a href="{% url 'products:product_edit' product.id %}" class="flex-1 text-center text-sm text-indigo-600 hover:bg-indigo-50 font-medium py-2 px-3 rounded-md transition-colors duration-200 flex items-center justify-center">
+                                    <i class="fas fa-edit mr-1.5"></i> Edit
+                                </a>
+                                <a href="{% url 'products:product_delete' product.id %}" class="flex-1 text-center text-sm text-red-600 hover:bg-red-50 font-medium py-2 px-3 rounded-md transition-colors duration-200 flex items-center justify-center">
+                                    <i class="fas fa-trash-alt mr-1.5"></i> Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% else %}
+        <div class="bg-gray-50 p-8 rounded-lg text-center shadow">
+            <i class="fas fa-box-open text-5xl text-gray-400 mb-4"></i>
+            <h2 class="text-xl font-semibold text-gray-700 mb-2">No Products Found</h2>
+            <p class="text-gray-500 mb-6 max-w-md mx-auto">
+                {% if search_query or selected_category %}
+                Try adjusting your search or filter criteria, or clear them to see all available products.
+                {% else %}
+                There are currently no products to display. You can start by adding a new product to your inventory.
+                {% endif %}
+            </p>
+            {% if search_query or selected_category %}
+            <a href="{% url 'products:product_list' %}" class="text-indigo-600 hover:text-indigo-800 font-medium hover:underline transition duration-200">
+                Clear Filters and Show All Products
+            </a>
+            {% else %}
+             <a href="{% url 'products:product_add' %}" 
+               class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-0.5">
+                <i class="fas fa-plus mr-2"></i> Add New Product
+            </a>
+            {% endif %}
+        </div>
         {% endif %}
     </div>
-    {% endif %}
-</div>
+</main>
 {% endblock %}

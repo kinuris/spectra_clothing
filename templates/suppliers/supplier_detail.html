@@ -3,135 +3,147 @@
 {% block title %}{{ supplier.name }} - Spectre Clothing{% endblock %}
 
 {% block content %}
-<div class="bg-white p-6 rounded-lg shadow-md mb-6">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">{{ supplier.name }}</h1>
-        <div class="flex space-x-2">
-            <a href="{% url 'suppliers:supplier_edit' supplier.id %}" 
-               class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
-                <i class="fas fa-edit mr-2"></i> Edit
-            </a>
-            <a href="{% url 'suppliers:supplier_delete' supplier.id %}" 
-               class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md transition duration-200">
-                <i class="fas fa-trash-alt mr-2"></i> Delete
-            </a>
-        </div>
-    </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Supplier Info -->
-        <div>
-            <h2 class="text-lg font-medium text-gray-900 mb-2">Supplier Information</h2>
-            <div class="bg-gray-50 rounded-md p-4">
-                <dl class="divide-y divide-gray-200">
-                    <div class="py-2 flex justify-between">
-                        <dt class="text-sm font-medium text-gray-500">Company Name:</dt>
-                        <dd class="text-sm text-gray-900">{{ supplier.name }}</dd>
-                    </div>
-                    <div class="py-2 flex justify-between">
-                        <dt class="text-sm font-medium text-gray-500">Contact Person:</dt>
-                        <dd class="text-sm text-gray-900">{{ supplier.contact_person }}</dd>
-                    </div>
-                    <div class="py-2 flex justify-between">
-                        <dt class="text-sm font-medium text-gray-500">Email:</dt>
-                        <dd class="text-sm text-gray-900">
-                            <a href="mailto:{{ supplier.email }}" class="text-indigo-600 hover:underline">
-                                {{ supplier.email }}
-                            </a>
-                        </dd>
-                    </div>
-                    <div class="py-2 flex justify-between">
-                        <dt class="text-sm font-medium text-gray-500">Phone Number:</dt>
-                        <dd class="text-sm text-gray-900">{{ supplier.phone_number }}</dd>
-                    </div>
-                    <div class="py-2">
-                        <dt class="text-sm font-medium text-gray-500 mb-1">Address:</dt>
-                        <dd class="text-sm text-gray-900">{{ supplier.address|default:"-"|linebreaks }}</dd>
-                    </div>
-                    <div class="py-2 flex justify-between">
-                        <dt class="text-sm font-medium text-gray-500">Working Since:</dt>
-                        <dd class="text-sm text-gray-900">{{ supplier.created_at|date:"F j, Y" }}</dd>
-                    </div>
-                    <div class="py-2 flex justify-between">
-                        <dt class="text-sm font-medium text-gray-500">Total Products:</dt>
-                        <dd class="text-sm font-bold text-indigo-600">{{ products.count }}</dd>
-                    </div>
-                </dl>
+<div class="space-y-8">
+
+    <!-- Supplier Details and Actions Card -->
+    <div class="bg-white p-6 sm:p-8 rounded-lg shadow-lg">
+        <!-- Header: Supplier Name and Main Actions -->
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center pb-6 mb-6 border-b border-gray-200">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">{{ supplier.name }}</h1>
+            <div class="flex space-x-3">
+                <a href="{% url 'suppliers:supplier_edit' supplier.id %}" 
+                   class="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md shadow-sm transition duration-200 text-sm font-medium">
+                    <i class="fas fa-edit mr-2"></i> Edit
+                </a>
+                <a href="{% url 'suppliers:supplier_delete' supplier.id %}" 
+                   class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow-sm transition duration-200 text-sm font-medium">
+                    <i class="fas fa-trash-alt mr-2"></i> Delete
+                </a>
             </div>
         </div>
         
-        <!-- Quick Actions -->
-        <div>
-            <h2 class="text-lg font-medium text-gray-900 mb-2">Quick Actions</h2>
-            <div class="bg-gray-50 rounded-md p-4">
-                <div class="space-y-3">
-                    <a href="{% url 'products:product_add' %}?supplier={{ supplier.id }}" class="flex items-center p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition duration-200">
-                        <i class="fas fa-plus-circle mr-2"></i>
-                        <span>Add New Product from {{ supplier.name }}</span>
-                    </a>
-                    <a href="{% url 'suppliers:supplier_list' %}" class="flex items-center p-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition duration-200">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        <span>Back to Supplier List</span>
-                    </a>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Supplier Information -->
+            <div class="lg:col-span-2">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200">Supplier Information</h2>
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <dl class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-start sm:items-center">
+                            <dt class="text-sm font-medium text-gray-600 sm:col-span-1">Company Name:</dt>
+                            <dd class="text-sm text-gray-800 sm:col-span-2 font-semibold">{{ supplier.name }}</dd>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-start sm:items-center">
+                            <dt class="text-sm font-medium text-gray-600 sm:col-span-1">Contact Person:</dt>
+                            <dd class="text-sm text-gray-800 sm:col-span-2">{{ supplier.contact_person|default:"N/A" }}</dd>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-start sm:items-center">
+                            <dt class="text-sm font-medium text-gray-600 sm:col-span-1">Email:</dt>
+                            <dd class="text-sm text-gray-800 sm:col-span-2">
+                                <a href="mailto:{{ supplier.email }}" class="text-indigo-600 hover:text-indigo-800 hover:underline">
+                                    {{ supplier.email }}
+                                </a>
+                            </dd>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-start sm:items-center">
+                            <dt class="text-sm font-medium text-gray-600 sm:col-span-1">Phone Number:</dt>
+                            <dd class="text-sm text-gray-800 sm:col-span-2">{{ supplier.phone_number|default:"N/A" }}</dd>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-start">
+                            <dt class="text-sm font-medium text-gray-600 sm:col-span-1">Address:</dt>
+                            <dd class="text-sm text-gray-800 sm:col-span-2">{{ supplier.address|default:"N/A"|linebreaksbr }}</dd>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-start sm:items-center">
+                            <dt class="text-sm font-medium text-gray-600 sm:col-span-1">Working Since:</dt>
+                            <dd class="text-sm text-gray-800 sm:col-span-2">{{ supplier.created_at|date:"F j, Y" }}</dd>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-start sm:items-center">
+                            <dt class="text-sm font-medium text-gray-600 sm:col-span-1">Total Products:</dt>
+                            <dd class="text-sm font-semibold text-indigo-700 sm:col-span-2">{{ products.count }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="lg:col-span-1">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200">Quick Actions</h2>
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <div class="space-y-4">
+                        <a href="{% url 'products:product_add' %}?supplier={{ supplier.id }}" 
+                           class="w-full flex items-center justify-center p-3 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition duration-200 text-sm font-medium">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            <span>Add New Product</span>
+                        </a>
+                        <a href="{% url 'suppliers:supplier_list' %}" 
+                           class="w-full flex items-center justify-center p-3 bg-gray-600 hover:bg-gray-700 text-white rounded-md shadow-sm transition duration-200 text-sm font-medium">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            <span>Back to Suppliers</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Product List -->
-<div class="bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Products Supplied</h2>
-    
-    {% if products %}
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead>
-                <tr>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Name</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost Price</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Selling Price</th>
-                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                {% for product in products %}
-                <tr>
-                    <td class="px-4 py-3 whitespace-nowrap font-mono text-sm">{{ product.sku }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap">
-                        <a href="{% url 'products:product_detail' product.id %}" class="text-indigo-600 hover:underline font-medium">
-                            {{ product.name }}
-                        </a>
-                    </td>
-                    <td class="px-4 py-3 whitespace-nowrap">{{ product.category.name }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap">${{ product.cost_price }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap">${{ product.selling_price }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap">
-                        <div class="flex space-x-2">
-                            <a href="{% url 'products:product_detail' product.id %}" class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i> View
+    <!-- Product List Card -->
+    <div class="bg-white p-6 sm:p-8 rounded-lg shadow-lg">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6 pb-2 border-b border-gray-200">Products Supplied by {{ supplier.name }}</h2>
+        
+        {% if products %}
+        <div class="overflow-x-auto rounded-md border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">SKU</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Product Name</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Category</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Cost Price</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Selling Price</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for product in products %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-700">{{ product.sku }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <a href="{% url 'products:product_detail' product.id %}" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline">
+                                {{ product.name }}
                             </a>
-                            <a href="{% url 'products:product_edit' product.id %}" class="text-indigo-600 hover:text-indigo-900">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <div class="bg-gray-50 p-6 rounded-md text-center">
-        <p class="text-gray-500">No products from this supplier yet.</p>
-        <div class="mt-4">
-            <a href="{% url 'products:product_add' %}?supplier={{ supplier.id }}" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
-                <i class="fas fa-plus-circle mr-2"></i> Add Product from {{ supplier.name }}
-            </a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ product.category.name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${{ product.cost_price|floatformat:2 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${{ product.selling_price|floatformat:2 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-4">
+                                <a href="{% url 'products:product_detail' product.id %}" class="text-gray-500 hover:text-gray-700 transition duration-150" title="View Product">
+                                    <i class="fas fa-eye"></i><span class="sr-only">View</span>
+                                </a>
+                                <a href="{% url 'products:product_edit' product.id %}" class="text-indigo-600 hover:text-indigo-800 transition duration-150" title="Edit Product">
+                                    <i class="fas fa-edit"></i><span class="sr-only">Edit</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+        {% else %}
+        <div class="bg-gray-50 p-8 rounded-md text-center border border-gray-200">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+            </svg>
+            <h3 class="mt-2 text-lg font-medium text-gray-800">No products found</h3>
+            <p class="mt-1 text-sm text-gray-600">This supplier does not have any products listed yet.</p>
+            <div class="mt-6">
+                <a href="{% url 'products:product_add' %}?supplier={{ supplier.id }}" 
+                   class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md shadow-sm transition duration-200 text-sm font-medium">
+                    <i class="fas fa-plus-circle mr-2"></i> Add Product for {{ supplier.name }}
+                </a>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 </div>
 {% endblock %}

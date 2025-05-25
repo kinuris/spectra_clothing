@@ -3,44 +3,43 @@
 {% block title %}Login - Spectre Clothing{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden mt-16">
-    <div class="py-4 px-6 bg-gradient-to-r from-purple-900 to-indigo-800 text-white text-center">
-        <h2 class="text-2xl font-bold">Login to Spectre Clothing</h2>
-        <p class="mt-1 text-sm">Inventory & Order Management System</p>
+<div class="max-w-md mx-auto card mt-16">
+    <div class="py-4 px-6 bg-gradient-to-r from-[#008ECB] to-[#3A79C1] card-header">
+        <h2 class="text-2xl font-bold text-center">Login to Spectra Style</h2>
+        <p class="mt-1 text-sm text-center text-white/80">Inventory & Order Management System</p>
     </div>
-    <div class="py-6 px-8">
+    <div class="py-6 px-8 card-body">
         <form method="POST" class="space-y-4">
             {% csrf_token %}
             
             {% if form.non_field_errors %}
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                    {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
+                <div class="messages">
+                    <div class="message-item error">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 </div>
             {% endif %}
             
-            <div>
-                <label for="username" class="block text-gray-700 font-medium mb-2">Username</label>
-                <input type="text" name="username" id="username" 
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" id="username" class="form-control"> 
                 {% if form.username.errors %}
-                    <p class="text-red-600 text-sm mt-1">{{ form.username.errors.0 }}</p>
+                    <p class="form-error">{{ form.username.errors.0 }}</p>
                 {% endif %}
             </div>
             
-            <div>
-                <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
-                <input type="password" name="password" id="password" 
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-control">
                 {% if form.password.errors %}
-                    <p class="text-red-600 text-sm mt-1">{{ form.password.errors.0 }}</p>
+                    <p class="form-error">{{ form.password.errors.0 }}</p>
                 {% endif %}
             </div>
             
-            <div>
-                <button type="submit" 
-                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
+            <div class="mt-6">
+                <button type="submit" class="btn btn-primary w-full">
                     Login
                 </button>
             </div>

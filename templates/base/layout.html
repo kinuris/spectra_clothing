@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Spectre Clothing{% endblock %}</title>
+    <title>{% block title %}Spectra Style{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/output.css">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col"> 
     <!-- Header -->
-    <header class="bg-gradient-to-r from-purple-900 to-indigo-800 text-white shadow-md">
+    <header class="text-white shadow-md" style="background-color: var(--color-dark-elements); border-bottom: 1px solid var(--color-border-neutral);">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <h1 class="text-xl font-bold">Spectre Clothing</h1>
+                <h1 class="text-2xl font-bold" style="color: var(--color-text-headings); letter-spacing: 0.08em;">SPECTRA STYLE</h1>
             </div>
             {% if user.is_authenticated %}
             <div class="flex items-center space-x-4">
-                <span>Welcome, {{ user.get_full_name|default:user.username }}</span>
-                <a href="{% url 'accounts:logout' %}" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition duration-200">
+                <span style="color: var(--color-text-secondary);">Welcome, {{ user.get_full_name|default:user.username }}</span>
+                <a href="{% url 'accounts:logout' %}" class="btn btn-logout py-1 px-3">
                     <i class="fas fa-sign-out-alt mr-1"></i> Logout
                 </a>
             </div>
@@ -31,53 +36,53 @@
     <div class="flex flex-1">
         {% if user.is_authenticated %}
         <!-- Sidebar Navigation -->
-        <aside class="bg-indigo-900 text-white w-64 py-6 px-4 hidden md:block">
+        <aside class="w-64 py-6 px-4 hidden md:block" style="background-color: var(--color-dark-elements); border-right: 1px solid var(--color-border-neutral);">
             <nav>
                 <ul class="space-y-2">
                     <li>
-                        <a href="{% url 'dashboard:dashboard' %}" class="block px-4 py-2 rounded hover:bg-indigo-800 transition duration-200">
-                            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                        <a href="{% url 'dashboard:dashboard' %}" class="sidebar-link">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                     </li>
                     {% if can_manage_products %}
                     <li>
-                        <a href="{% url 'products:product_list' %}" class="block px-4 py-2 rounded hover:bg-indigo-800 transition duration-200">
-                            <i class="fas fa-tshirt mr-2"></i> Products
+                        <a href="{% url 'products:product_list' %}" class="sidebar-link">
+                            <i class="fas fa-tshirt"></i> Products
                         </a>
                     </li>
                     {% endif %}
                     {% if can_manage_inventory %}
                     <li>
-                        <a href="{% url 'inventory:overview' %}" class="block px-4 py-2 rounded hover:bg-indigo-800 transition duration-200">
-                            <i class="fas fa-boxes mr-2"></i> Inventory
+                        <a href="{% url 'inventory:overview' %}" class="sidebar-link">
+                            <i class="fas fa-boxes"></i> Inventory
                         </a>
                     </li>
                     {% endif %}
                     {% if can_manage_orders %}
                     <li>
-                        <a href="{% url 'orders:order_list' %}" class="block px-4 py-2 rounded hover:bg-indigo-800 transition duration-200">
-                            <i class="fas fa-shopping-cart mr-2"></i> Orders
+                        <a href="{% url 'orders:order_list' %}" class="sidebar-link">
+                            <i class="fas fa-shopping-cart"></i> Orders
                         </a>
                     </li>
                     {% endif %}
                     {% if can_manage_suppliers %}
                     <li>
-                        <a href="{% url 'suppliers:supplier_list' %}" class="block px-4 py-2 rounded hover:bg-indigo-800 transition duration-200">
-                            <i class="fas fa-truck mr-2"></i> Suppliers
+                        <a href="{% url 'suppliers:supplier_list' %}" class="sidebar-link">
+                            <i class="fas fa-truck"></i> Suppliers
                         </a>
                     </li>
                     {% endif %}
                     {% if can_manage_users %}
                     <li>
-                        <a href="{% url 'accounts:user_list' %}" class="block px-4 py-2 rounded hover:bg-indigo-800 transition duration-200">
-                            <i class="fas fa-users mr-2"></i> Users
+                        <a href="{% url 'accounts:user_list' %}" class="sidebar-link">
+                            <i class="fas fa-users"></i> Users
                         </a>
                     </li>
                     {% endif %}
                     {% if can_view_reports %}
                     <li>
-                        <a href="{% url 'dashboard:report_list' %}" class="block px-4 py-2 rounded hover:bg-indigo-800 transition duration-200">
-                            <i class="fas fa-chart-line mr-2"></i> Reports
+                        <a href="{% url 'dashboard:report_list' %}" class="sidebar-link">
+                            <i class="fas fa-chart-line"></i> Reports
                         </a>
                     </li>
                     {% endif %}
@@ -89,9 +94,9 @@
         <!-- Main Content -->
         <main class="flex-1 p-6">
             {% if messages %}
-                <div class="mb-6">
+                <div class="mb-6 messages">
                     {% for message in messages %}
-                        <div class="p-4 mb-4 {{ message.tags }} rounded">
+                        <div class="message-item {{ message.tags }}">
                             {{ message }}
                         </div>
                     {% endfor %}
@@ -103,9 +108,9 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-4">
+    <footer class="py-6" style="background-color: var(--color-dark-elements); border-top: 1px solid var(--color-border-neutral);">
         <div class="container mx-auto px-4 text-center">
-            <p>&copy; {% now "Y" %} Spectre Clothing. All rights reserved.</p>
+            <p style="color: var(--color-text-secondary); font-size: 0.9rem;">&copy; {% now "Y" %} Spectra Style. All rights reserved. | Elevating Fashion with Cutting-Edge Design</p>
         </div>
     </footer>
 

@@ -54,12 +54,12 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr>
-                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
-                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Units Sold</th>
-                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
-                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% of Sales</th>
+                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Rank</th>
+                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Product</th>
+                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Category</th>
+                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Units Sold</th>
+                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Revenue</th>
+                        <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">% of Sales</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -73,16 +73,16 @@
                                 {{ top_product.product.name }}
                             </a>
                         </td>
-                        <td class="px-4 py-3 whitespace-nowrap">
+                        <td class="px-4 py-3 whitespace-nowrap text-gray-700">
                             {{ top_product.product.category.name }}
                         </td>
-                        <td class="px-4 py-3 whitespace-nowrap">
+                        <td class="px-4 py-3 whitespace-nowrap text-gray-800">
                             {{ top_product.total_quantity }}
                         </td>
-                        <td class="px-4 py-3 whitespace-nowrap font-medium">
+                        <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">
                             ${{ top_product.total_sales }}
                         </td>
-                        <td class="px-4 py-3 whitespace-nowrap">
+                        <td class="px-4 py-3 whitespace-nowrap text-gray-700">
                             {% widthratio top_product.total_sales report.total_sales 100 %}%
                         </td>
                     </tr>
@@ -92,7 +92,7 @@
         </div>
         {% else %}
         <div class="bg-gray-50 p-6 rounded-md text-center">
-            <p class="text-gray-500">No product data available for this report period.</p>
+            <p class="text-gray-700">No product data available for this report period.</p>
         </div>
         {% endif %}
     </div>
