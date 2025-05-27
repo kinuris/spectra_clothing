@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import User
 from .forms import LoginForm
 
@@ -55,7 +56,25 @@ def is_admin(user):
 @user_passes_test(is_admin)
 def user_list(request):
     users = User.objects.all().order_by('username')
-    return render(request, 'accounts/user_list.html', {'users': users})
+    
+    # Pagination
+    paginator = Paginator(users, 10)  # Show 10 users per page
+    page = request.GET.get('page')
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+    
+    context = {
+        'users': users,
+        'is_paginated': users.has_other_pages(),
+        'page_obj': users,
+        'paginator': paginator,
+    }
+    
+    return render(request, 'accounts/user_list.html', context)
 
 @login_required
 @user_passes_test(is_admin)

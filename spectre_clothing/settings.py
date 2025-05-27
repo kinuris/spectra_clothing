@@ -73,6 +73,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'spectre_clothing.context_processors.user_permissions',
+                'spectre_clothing.context_processors.cache_bust',
             ],
         },
     },

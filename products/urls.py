@@ -9,6 +9,7 @@ urlpatterns = [
     path('<int:product_id>/', views.product_detail, name='product_detail'),
     path('<int:product_id>/edit/', views.product_edit, name='product_edit'),
     path('<int:product_id>/delete/', views.product_delete, name='product_delete'),
+    path('image/<int:image_id>/delete/', views.product_image_delete, name='product_image_delete'),
     
     # Category URLs
     path('categories/', views.category_list, name='category_list'),

@@ -36,4 +36,7 @@ urlpatterns = [
 
 # Add media URL for development
 if settings.DEBUG:
+    # Serve static files with Cache-Control header to prevent browser caching
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0], 
+                         headers={'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0'})

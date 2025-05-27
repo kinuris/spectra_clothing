@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Size, Color, ProductVariant, InventoryAdjustment
 from products.models import Product
 from django.db.models import Sum
@@ -50,11 +51,24 @@ def variant_list(request):
     # Get all products for filter dropdown
     products = Product.objects.all().order_by('name')
     
+    # Pagination
+    paginator = Paginator(variants, 10)  # Show 10 items per page
+    page = request.GET.get('page')
+    try:
+        variants = paginator.page(page)
+    except PageNotAnInteger:
+        variants = paginator.page(1)
+    except EmptyPage:
+        variants = paginator.page(paginator.num_pages)
+    
     context = {
         'variants': variants,
         'products': products,
         'selected_product': product_id,
         'selected_stock_level': stock_level,
+        'is_paginated': variants.has_other_pages(),
+        'page_obj': variants,
+        'paginator': paginator,
     }
     
     return render(request, 'inventory/variant_list.html', context)
@@ -173,12 +187,25 @@ def adjustment_list(request):
     # Get all products for filter dropdown
     products = Product.objects.all().order_by('name')
     
+    # Pagination
+    paginator = Paginator(adjustments, 10)  # Show 10 items per page
+    page = request.GET.get('page')
+    try:
+        adjustments = paginator.page(page)
+    except PageNotAnInteger:
+        adjustments = paginator.page(1)
+    except EmptyPage:
+        adjustments = paginator.page(paginator.num_pages)
+    
     context = {
         'adjustments': adjustments,
         'products': products,
         'selected_product': product_id,
         'selected_type': adjustment_type,
         'adjustment_types': InventoryAdjustment.ADJUSTMENT_TYPE_CHOICES,
+        'is_paginated': adjustments.has_other_pages(),
+        'page_obj': adjustments,
+        'paginator': paginator,
     }
     
     return render(request, 'inventory/adjustment_list.html', context)
@@ -237,7 +264,25 @@ def adjustment_add(request):
 @login_required
 def size_list(request):
     sizes = Size.objects.all().order_by('name')
-    return render(request, 'inventory/size_list.html', {'sizes': sizes})
+    
+    # Pagination
+    paginator = Paginator(sizes, 10)  # Show 10 items per page
+    page = request.GET.get('page')
+    try:
+        sizes = paginator.page(page)
+    except PageNotAnInteger:
+        sizes = paginator.page(1)
+    except EmptyPage:
+        sizes = paginator.page(paginator.num_pages)
+    
+    context = {
+        'sizes': sizes,
+        'is_paginated': sizes.has_other_pages(),
+        'page_obj': sizes,
+        'paginator': paginator,
+    }
+    
+    return render(request, 'inventory/size_list.html', context)
 
 @login_required
 def size_add(request):
@@ -289,7 +334,25 @@ def size_delete(request, size_id):
 @login_required
 def color_list(request):
     colors = Color.objects.all().order_by('name')
-    return render(request, 'inventory/color_list.html', {'colors': colors})
+    
+    # Pagination
+    paginator = Paginator(colors, 10)  # Show 10 colors per page
+    page = request.GET.get('page')
+    try:
+        colors = paginator.page(page)
+    except PageNotAnInteger:
+        colors = paginator.page(1)
+    except EmptyPage:
+        colors = paginator.page(paginator.num_pages)
+    
+    context = {
+        'colors': colors,
+        'is_paginated': colors.has_other_pages(),
+        'page_obj': colors,
+        'paginator': paginator,
+    }
+    
+    return render(request, 'inventory/color_list.html', context)
 
 @login_required
 def color_add(request):

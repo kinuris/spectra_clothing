@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Product, Category, ProductImage
 from suppliers.models import Supplier
 from inventory.models import ProductVariant, Size, Color
@@ -23,11 +24,24 @@ def product_list(request):
     if search_query:
         products = products.filter(name__icontains=search_query) | products.filter(sku__icontains=search_query)
     
+    # Pagination
+    paginator = Paginator(products, 10)  # Show 10 items per page
+    page = request.GET.get('page')
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+    
     context = {
         'products': products,
         'categories': categories,
         'selected_category': category_id,
         'search_query': search_query,
+        'is_paginated': products.has_other_pages(),
+        'page_obj': products,
+        'paginator': paginator,
     }
     
     return render(request, 'products/product_list.html', context)
@@ -109,6 +123,7 @@ def product_edit(request, product_id):
         cost_price = request.POST.get('cost_price')
         selling_price = request.POST.get('selling_price')
         description = request.POST.get('description')
+        primary_image_id = request.POST.get('primary_image')
         
         # Validate data
         if Product.objects.filter(sku=sku).exclude(id=product_id).exists():
@@ -125,13 +140,31 @@ def product_edit(request, product_id):
                 product.description = description
                 product.save()
                 
-                # Handle images
+                # Handle primary image selection
+                if primary_image_id:
+                    # Reset all images to non-primary
+                    ProductImage.objects.filter(product=product).update(is_primary=False)
+                    
+                    # Set the selected image as primary
+                    try:
+                        primary_image = ProductImage.objects.get(id=primary_image_id, product=product)
+                        primary_image.is_primary = True
+                        primary_image.save()
+                    except ProductImage.DoesNotExist:
+                        pass
+                
+                # Handle new images
                 images = request.FILES.getlist('images')
                 for index, image in enumerate(images):
+                    # Only set as primary if there are no other images
+                    is_primary = False
+                    if not primary_image_id and not ProductImage.objects.filter(product=product, is_primary=True).exists():
+                        is_primary = True
+                        
                     ProductImage.objects.create(
                         product=product,
                         image=image,
-                        is_primary=False  # New images are not primary by default
+                        is_primary=is_primary
                     )
                 
                 messages.success(request, f'Product {name} updated successfully.')
@@ -164,9 +197,58 @@ def product_delete(request, product_id):
     return render(request, 'products/product_confirm_delete.html', {'product': product})
 
 @login_required
+def product_image_delete(request, image_id):
+    image = get_object_or_404(ProductImage, id=image_id)
+    product_id = image.product.id
+    
+    # Handle setting a new primary image if needed
+    is_primary = image.is_primary
+    
+    if request.method == 'POST':
+        try:
+            # Delete the image file
+            if image.image:
+                if os.path.isfile(image.image.path):
+                    os.remove(image.image.path)
+            
+            # Delete the image record
+            image.delete()
+            
+            # If this was the primary image, set a new primary if available
+            if is_primary:
+                remaining_images = ProductImage.objects.filter(product_id=product_id).first()
+                if remaining_images:
+                    remaining_images.is_primary = True
+                    remaining_images.save()
+            
+            messages.success(request, 'Image deleted successfully.')
+        except Exception as e:
+            messages.error(request, f'Error deleting image: {str(e)}')
+    
+    return redirect('products:product_edit', product_id=product_id)
+
+@login_required
 def category_list(request):
     categories = Category.objects.all().order_by('name')
-    return render(request, 'products/category_list.html', {'categories': categories})
+    
+    # Pagination
+    paginator = Paginator(categories, 10)  # Show 10 items per page
+    page = request.GET.get('page')
+    try:
+        categories = paginator.page(page)
+    except PageNotAnInteger:
+        categories = paginator.page(1)
+    except EmptyPage:
+        categories = paginator.page(paginator.num_pages)
+    
+    context = {
+        'categories': categories,
+        'is_paginated': categories.has_other_pages(),
+        'page_obj': categories,
+        'paginator': paginator,
+    }
+    
+    return render(request, 'products/category_list.html', context)
 
 @login_required
 def category_add(request):

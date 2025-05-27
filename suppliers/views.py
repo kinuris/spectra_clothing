@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Supplier
 from products.models import Product
 
@@ -15,9 +16,24 @@ def supplier_list(request):
     if search_query:
         suppliers = suppliers.filter(name__icontains=search_query) | suppliers.filter(contact_person__icontains=search_query)
     
+    # Pagination
+    paginator = Paginator(suppliers, 10)  # Show 10 suppliers per page
+    page = request.GET.get('page')
+    try:
+        suppliers = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        suppliers = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        suppliers = paginator.page(paginator.num_pages)
+    
     context = {
         'suppliers': suppliers,
         'search_query': search_query,
+        'is_paginated': suppliers.has_other_pages(),
+        'page_obj': suppliers,
+        'paginator': paginator,
     }
     
     return render(request, 'suppliers/supplier_list.html', context)

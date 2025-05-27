@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Order, OrderItem, Customer
 from products.models import Product
 from inventory.models import ProductVariant, InventoryAdjustment
@@ -32,6 +33,16 @@ def order_list(request):
     # Get all customers for filter dropdown
     customers = Customer.objects.all().order_by('name')
     
+    # Pagination
+    paginator = Paginator(orders, 10)  # Show 10 items per page
+    page = request.GET.get('page')
+    try:
+        orders = paginator.page(page)
+    except PageNotAnInteger:
+        orders = paginator.page(1)
+    except EmptyPage:
+        orders = paginator.page(paginator.num_pages)
+    
     context = {
         'orders': orders,
         'customers': customers,
@@ -39,6 +50,9 @@ def order_list(request):
         'selected_customer': customer_id,
         'search_query': search_query,
         'status_choices': Order.STATUS_CHOICES,
+        'is_paginated': orders.has_other_pages(),
+        'page_obj': orders,
+        'paginator': paginator,
     }
     
     return render(request, 'orders/order_list.html', context)
@@ -318,9 +332,22 @@ def customer_list(request):
     if search_query:
         customers = customers.filter(name__icontains=search_query) | customers.filter(phone_number__icontains=search_query)
     
+    # Pagination
+    paginator = Paginator(customers, 10)  # Show 10 items per page
+    page = request.GET.get('page')
+    try:
+        customers = paginator.page(page)
+    except PageNotAnInteger:
+        customers = paginator.page(1)
+    except EmptyPage:
+        customers = paginator.page(paginator.num_pages)
+    
     context = {
         'customers': customers,
         'search_query': search_query,
+        'is_paginated': customers.has_other_pages(),
+        'page_obj': customers,
+        'paginator': paginator,
     }
     
     return render(request, 'orders/customer_list.html', context)

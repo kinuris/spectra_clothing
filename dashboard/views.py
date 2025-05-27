@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 from django.db.models import Count, Sum
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import timedelta
 from .models import SalesReport, TopSellingProduct
 from orders.models import Order, OrderItem
@@ -55,9 +56,28 @@ def dashboard_view(request):
     return render(request, 'dashboard/dashboard.html', context)
 
 @login_required
+@login_required
 def report_list(request):
     reports = SalesReport.objects.all().order_by('-generated_at')
-    return render(request, 'dashboard/report_list.html', {'reports': reports})
+    
+    # Pagination
+    paginator = Paginator(reports, 10)  # Show 10 reports per page
+    page = request.GET.get('page')
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+    
+    context = {
+        'reports': reports,
+        'is_paginated': reports.has_other_pages(),
+        'page_obj': reports,
+        'paginator': paginator,
+    }
+    
+    return render(request, 'dashboard/report_list.html', context)
 
 @login_required
 def generate_report(request):
