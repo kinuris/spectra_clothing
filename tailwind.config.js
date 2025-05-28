@@ -10,5 +10,5 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-  important: true, // Make all Tailwind utilities use !important
+  // important: true, // Make all Tailwind utilities use !important
 }

@@ -22,6 +22,20 @@ class SalesReport(models.Model):
     generated_at = models.DateTimeField(auto_now_add=True)
     generated_by = models.ForeignKey('accounts.User', on_delete=models.SET_NULL, null=True)
     
+    # These properties will be calculated on-the-fly and won't be stored in the database
+    @property
+    def average_order_value(self):
+        if self.total_orders > 0:
+            return self.total_sales / self.total_orders
+        return None
+    
+    @property
+    def daily_average_sales(self):
+        date_delta = (self.date_to - self.date_from).days + 1  # Include both start and end days
+        if date_delta > 0:
+            return self.total_sales / date_delta
+        return self.total_sales  # If it's the same day
+    
     def __str__(self):
         return f"{self.get_report_type_display()} Report: {self.date_from} to {self.date_to}"
 

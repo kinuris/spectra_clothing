@@ -108,6 +108,11 @@ def generate_report(request):
         total_orders = orders.count()
         total_sales = sum([order.total_amount for order in orders])
         
+        # Calculate KPIs
+        average_order_value = None
+        if total_orders > 0:
+            average_order_value = total_sales / total_orders
+        
         # Create report
         report = SalesReport.objects.create(
             report_type=report_type,
@@ -148,6 +153,10 @@ def generate_report(request):
 @login_required
 def report_detail(request, report_id):
     report = get_object_or_404(SalesReport, id=report_id)
+    
+    # No need to calculate KPIs here as they're defined as properties in the SalesReport model
+    # and will be calculated automatically when accessed in the template
+    
     return render(request, 'dashboard/report_detail.html', {'report': report})
 
 @login_required
