@@ -1,4 +1,7 @@
+
+
 {% extends 'base/layout.html' %}
+{% load dashboard_extras %}
 
 {% block title %}Analytics - Spectre Clothing{% endblock %}
 
@@ -6,8 +9,9 @@
 <div class="space-y-6">
     <!-- Header -->
     <div class="bg-white p-6 rounded-lg shadow-md">
-        <div class="flex justify-between items-center mb-4"> <!-- Corrected typo: fl</div>ex to flex -->
+        <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-semibold text-gray-800">Sales Analytics</h1>
+            
             <div class="flex space-x-2">
                 <a href="{% url 'dashboard:report_list' %}" 
                    class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200 text-sm font-medium">
@@ -21,7 +25,7 @@
         </div>
         
         <div class="text-gray-600">
-            <p>View your sales data and performance metrics at a glance. Use the filters below to adjust the time period and focus on specific aspects of your business.</p>
+            <p>View your sales data and performance metrics at a glance. Showing data from {{ period_start|date:"M d, Y" }} to {{ period_end|date:"M d, Y" }}.</p>
         </div>
     </div>
     
@@ -29,26 +33,42 @@
     <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-lg font-medium text-gray-800 mb-4">Time Period</h2>
         
-        <div class="flex flex-wrap gap-2 mb-4">
-            <button class="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium">Last 7 Days</button>
-            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm font-medium">Last 30 Days</button>
-            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm font-medium">This Month</button>
-            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm font-medium">Last Month</button>
-            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm font-medium">Last Quarter</button>
-            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm font-medium">Year to Date</button>
-        </div>
-        
-        <div class="flex flex-wrap gap-4 items-center">
-            <div class="flex items-center">
-                <span class="text-sm text-gray-700 mr-2">From:</span>
-                <input type="date" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+        <form method="get" action="{% url 'dashboard:analytics' %}">
+            <div class="flex flex-wrap gap-2 mb-4">
+                <a href="{% url 'dashboard:analytics' %}?period=7" 
+                   class="px-4 py-2 {% if period_days == 7 %}bg-indigo-600 text-white{% else %}bg-white border border-gray-300 text-gray-700 hover:bg-gray-50{% endif %} rounded-md text-sm font-medium">
+                   Last 7 Days
+                </a>
+                <a href="{% url 'dashboard:analytics' %}?period=30" 
+                   class="px-4 py-2 {% if period_days == 30 %}bg-indigo-600 text-white{% else %}bg-white border border-gray-300 text-gray-700 hover:bg-gray-50{% endif %} rounded-md text-sm font-medium">
+                   Last 30 Days
+                </a>
+                <a href="{% url 'dashboard:analytics' %}?period=90" 
+                   class="px-4 py-2 {% if period_days == 90 %}bg-indigo-600 text-white{% else %}bg-white border border-gray-300 text-gray-700 hover:bg-gray-50{% endif %} rounded-md text-sm font-medium">
+                   Last Quarter
+                </a>
+                <a href="{% url 'dashboard:analytics' %}?period=180" 
+                   class="px-4 py-2 {% if period_days == 180 %}bg-indigo-600 text-white{% else %}bg-white border border-gray-300 text-gray-700 hover:bg-gray-50{% endif %} rounded-md text-sm font-medium">
+                   Last 6 Months
+                </a>
+                <a href="{% url 'dashboard:analytics' %}?period=365" 
+                   class="px-4 py-2 {% if period_days == 365 %}bg-indigo-600 text-white{% else %}bg-white border border-gray-300 text-gray-700 hover:bg-gray-50{% endif %} rounded-md text-sm font-medium">
+                   Year to Date
+                </a>
             </div>
-            <div class="flex items-center">
-                <span class="text-sm text-gray-700 mr-2">To:</span>
-                <input type="date" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+            
+            <div class="flex flex-wrap gap-4 items-center">
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-2">From:</span>
+                    <input name="start_date" type="date" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-2">To:</span>
+                    <input name="end_date" type="date" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <button type="submit" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-md font-medium">Apply</button>
             </div>
-            <button class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-md font-medium">Apply</button>
-        </div>
+        </form>
     </div>
     
     <!-- Key Metrics Cards -->
@@ -58,14 +78,15 @@
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Sales</h3>
-                    <p class="text-3xl font-bold text-gray-800 mt-1">$10,245.00</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-1">${{ total_sales|floatformat:2 }}</p>
                 </div>
                 <div class="p-3 bg-green-100 rounded-full">
                     <i class="fas fa-dollar-sign text-xl text-green-600"></i>
                 </div>
             </div>
-            <div class="text-sm text-green-600 flex items-center">
-                <i class="fas fa-arrow-up mr-1"></i> 12.5% vs previous period
+            <div class="text-sm {% if sales_change_pct >= 0 %}text-green-600{% else %}text-red-600{% endif %} flex items-center">
+                <i class="fas fa-arrow-{% if sales_change_pct >= 0 %}up{% else %}down{% endif %} mr-1"></i> 
+                {{ sales_change_pct|floatformat:1 }}% vs previous period
             </div>
         </div>
         
@@ -74,14 +95,15 @@
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</h3>
-                    <p class="text-3xl font-bold text-gray-800 mt-1">142</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-1">{{ total_orders }}</p>
                 </div>
                 <div class="p-3 bg-blue-100 rounded-full">
                     <i class="fas fa-shopping-cart text-xl text-blue-600"></i>
                 </div>
             </div>
-            <div class="text-sm text-green-600 flex items-center">
-                <i class="fas fa-arrow-up mr-1"></i> 8.3% vs previous period
+            <div class="text-sm {% if orders_change_pct >= 0 %}text-green-600{% else %}text-red-600{% endif %} flex items-center">
+                <i class="fas fa-arrow-{% if orders_change_pct >= 0 %}up{% else %}down{% endif %} mr-1"></i> 
+                {{ orders_change_pct|floatformat:1 }}% vs previous period
             </div>
         </div>
         
@@ -90,45 +112,109 @@
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Average Order Value</h3>
-                    <p class="text-3xl font-bold text-gray-800 mt-1">$72.15</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-1">${{ avg_order_value|floatformat:2 }}</p>
                 </div>
                 <div class="p-3 bg-purple-100 rounded-full">
                     <i class="fas fa-chart-line text-xl text-purple-600"></i>
                 </div>
             </div>
-            <div class="text-sm text-red-600 flex items-center">
-                <i class="fas fa-arrow-down mr-1"></i> 3.1% vs previous period
+            <div class="text-sm {% if aov_change_pct >= 0 %}text-green-600{% else %}text-red-600{% endif %} flex items-center">
+                <i class="fas fa-arrow-{% if aov_change_pct >= 0 %}up{% else %}down{% endif %} mr-1"></i> 
+                {{ aov_change_pct|floatformat:1 }}% vs previous period
             </div>
         </div>
     </div>
     
-    <!-- Charts Section -->
+    <!-- Charts Section - 2x2 Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Sales Trend Chart -->
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-lg font-medium text-gray-800 mb-4">Sales Trend</h2>
-            <div class="h-80 bg-gray-50 flex items-center justify-center rounded-md border border-gray-200">
-                <div class="text-center text-gray-500">
-                    <i class="fas fa-chart-line text-4xl mb-2"></i>
-                    <p>Sales trend visualization</p>
-                    <p class="text-xs">(Chart visualization placeholder)</p>
-                </div>
+            <div class="h-80 bg-gray-50 rounded-md border border-gray-200 p-4">
+                <canvas id="salesTrendChart"></canvas>
             </div>
         </div>
         
         <!-- Top Products Chart -->
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-lg font-medium text-gray-800 mb-4">Top Products</h2>
-            <div class="h-80 bg-gray-50 flex items-center justify-center rounded-md border border-gray-200">
-                <div class="text-center text-gray-500">
-                    <i class="fas fa-chart-pie text-4xl mb-2"></i>
-                    <p>Top products visualization</p>
-                    <p class="text-xs">(Chart visualization placeholder)</p>
+            <div class="h-80 bg-gray-50 rounded-md border border-gray-200 p-4">
+                <canvas id="topProductsChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Category Distribution Chart -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-lg font-medium text-gray-800 mb-4">Category Distribution</h2>
+            <div class="h-80 bg-gray-50 rounded-md border border-gray-200 p-4">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Performance Metrics Chart -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-lg font-medium text-gray-800 mb-4">Performance Indicators</h2>
+            <div class="h-80 bg-gray-50 rounded-md border border-gray-200 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                    <!-- Sales Growth -->
+                    <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-sm font-semibold text-gray-700">Sales Growth</h3>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                    {% if sales_change_pct >= 0 %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                    <i class="fas fa-arrow-{% if sales_change_pct >= 0 %}up{% else %}down{% endif %} mr-1"></i>
+                                    {{ sales_change_pct|floatformat:1 }}%
+                                </span>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">${{ total_sales|floatformat:2 }}</div>
+                            <div class="text-xs text-gray-500 mt-1">vs. previous period</div>
+                        </div>
+                        <div class="mt-6">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs text-gray-600">Progress</span>
+                                <span class="text-xs font-medium {% if sales_change_pct >= 0 %}text-green-600{% else %}text-red-600{% endif %}">
+                                    {{ sales_change_pct|floatformat:1 }}%
+                                </span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="{% if sales_change_pct >= 0 %}bg-gradient-to-r from-green-500 to-green-600{% else %}bg-gradient-to-r from-red-500 to-red-600{% endif %} h-2 rounded-full transition-all duration-300" 
+                                     style="width: {% if sales_change_pct >= 0 %}{% if sales_change_pct > 100 %}100{% else %}{{ sales_change_pct|floatformat:0 }}{% endif %}{% else %}{% if sales_change_pct < -100 %}100{% else %}{{ sales_change_pct|floatformat:0|cut:"-" }}{% endif %}{% endif %}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Orders Growth -->
+                    <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-sm font-semibold text-gray-700">Orders Growth</h3>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                    {% if orders_change_pct >= 0 %}bg-blue-100 text-blue-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                    <i class="fas fa-arrow-{% if orders_change_pct >= 0 %}up{% else %}down{% endif %} mr-1"></i>
+                                    {{ orders_change_pct|floatformat:1 }}%
+                                </span>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">{{ total_orders }}</div>
+                            <div class="text-xs text-gray-500 mt-1">vs. previous period</div>
+                        </div>
+                        <div class="mt-6">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs text-gray-600">Progress</span>
+                                <span class="text-xs font-medium {% if orders_change_pct >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
+                                    {{ orders_change_pct|floatformat:1 }}%
+                                </span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="{% if orders_change_pct >= 0 %}bg-gradient-to-r from-blue-500 to-blue-600{% else %}bg-gradient-to-r from-red-500 to-red-600{% endif %} h-2 rounded-full transition-all duration-300" 
+                                     style="width: {% if orders_change_pct >= 0 %}{% if orders_change_pct > 100 %}100{% else %}{{ orders_change_pct|floatformat:0 }}{% endif %}{% else %}{% if orders_change_pct < -100 %}100{% else %}{{ orders_change_pct|floatformat:0|cut:"-" }}{% endif %}{% endif %}%"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    
+        </div>  
     <!-- Detailed Analysis -->
     <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-lg font-medium text-gray-800 mb-4">Sales Breakdown</h2>
@@ -144,46 +230,252 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                    {% for category in category_sales %}
                     <tr class="hover:bg-gray-50 transition-colors duration-150">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">T-Shirts</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">48</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">125</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium text-right">$3,750.00</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">36.6%</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            <div class="flex items-center">
+                                <div class="h-3 w-3 rounded-full mr-2" style="background-color: {{ forloop.counter|hash_to_color }}"></div>
+                                {{ category.product_variant__product__category__name }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">{{ category.orders }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">{{ category.units }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium text-right">${{ category.revenue|floatformat:2 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">
+                            <div class="flex items-center justify-end">
+                                <span class="mr-2">{{ category.percentage }}%</span>
+                                <div class="w-16 bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-indigo-600 h-2.5 rounded-full" style="width: {{ category.percentage }}%"></div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
-                    <tr class="hover:bg-gray-50 transition-colors duration-150">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Pants</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">35</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">82</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium text-right">$2,870.00</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">28.0%</td>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-6 text-center text-gray-500">No sales data available for this period</td>
                     </tr>
-                    <tr class="""hover:bg-gray-50 transition-colors duration-150">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Hoodies</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">27</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">58</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium text-right">$2,320.00</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">22.6%</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50 transition-colors duration-150">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Accessories</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">32</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">95</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium text-right">$1,305.00</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">12.7%</td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
+                {% if category_sales %}
                 <tfoot class="bg-gray-100">
                     <tr class="font-semibold text-gray-700">
                         <td class="px-6 py-3 text-left text-sm">Total</td>
-                        <td class="px-6 py-3 text-right text-sm">142</td>
-                        <td class="px-6 py-3 text-right text-sm">360</td>
-                        <td class="px-6 py-3 text-right text-sm font-bold text-gray-900">$10,245.00</td>
+                        <td class="px-6 py-3 text-right text-sm">{{ total_orders }}</td>
+                        <td class="px-6 py-3 text-right text-sm">{% if category_sales %}{{ category_sales|dictsumattr:"units" }}{% else %}0{% endif %}</td>
+                        <td class="px-6 py-3 text-right text-sm font-bold text-gray-900">${{ total_sales|floatformat:2 }}</td>
                         <td class="px-6 py-3 text-right text-sm">100%</td>
                     </tr>
                 </tfoot>
+                {% endif %}
             </table>
         </div>
     </div>
 </div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+<!-- Sales Chart Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Sales Trend Chart
+    const salesTrendCtx = document.getElementById('salesTrendChart').getContext('2d');
+    
+    // Parse sales data from Django template
+    const salesData = {
+        {% for date, amount in daily_sales_data.items %}
+            "{{ date }}": {{ amount|floatformat:2 }},
+        {% endfor %}
+    };
+    
+    // Format dates for display and prepare data arrays
+    const dates = Object.keys(salesData).sort();
+    const formattedDates = dates.map(date => {
+        const d = new Date(date);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
+    const amounts = dates.map(date => salesData[date]);
+    
+    const salesTrendChart = new Chart(salesTrendCtx, {
+        type: 'line',
+        data: {
+            labels: formattedDates,
+            datasets: [{
+                label: 'Daily Sales ($)',
+                data: amounts,
+                fill: true,
+                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                borderColor: 'rgba(79, 70, 229, 0.8)',
+                borderWidth: 2,
+                tension: 0.4,
+                pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+                pointRadius: 3,
+                pointHoverRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `$${context.raw}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        }
+    });
+    
+    // Top Products Chart
+    const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+    
+    // Product Names and Revenue
+    const productNames = [
+        {% for product in top_products %}
+            "{{ product.product_variant__product__name }}",
+        {% endfor %}
+    ];
+    
+    const productRevenue = [
+        {% for product in top_products %}
+            {{ product.revenue|floatformat:2 }},
+        {% endfor %}
+    ];
+    
+    // Define colors for the chart
+    const barColors = [
+        'rgba(79, 70, 229, 0.8)',
+        'rgba(16, 185, 129, 0.8)',
+        'rgba(245, 158, 11, 0.8)',
+        'rgba(239, 68, 68, 0.8)',
+        'rgba(139, 92, 246, 0.8)'
+    ];
+    
+    const topProductsChart = new Chart(topProductsCtx, {
+        type: 'bar',
+        data: {
+            labels: productNames,
+            datasets: [{
+                label: 'Revenue ($)',
+                data: productRevenue,
+                backgroundColor: barColors,
+                borderColor: barColors.map(color => color.replace('0.8', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `$${context.raw} revenue`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+    // Category Distribution Chart
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    
+    // Category names and revenue values
+    const categoryNames = [
+        {% for category in category_sales %}
+            "{{ category.product_variant__product__category__name }}",
+        {% endfor %}
+    ];
+    
+    const categoryRevenue = [
+        {% for category in category_sales %}
+            {{ category.revenue|floatformat:2 }},
+        {% endfor %}
+    ];
+    
+    // Generate colors for each category
+    const categoryColors = [
+        {% for category in category_sales %}
+            "{{ forloop.counter|hash_to_color }}",
+        {% endfor %}
+    ];
+    
+    const categoryBorderColors = categoryColors.map(color => color.replace('0.8', '1'));
+    
+    const categoryChart = new Chart(categoryCtx, {
+        type: 'doughnut',
+        data: {
+            labels: categoryNames,
+            datasets: [{
+                label: 'Revenue by Category',
+                data: categoryRevenue,
+                backgroundColor: categoryColors,
+                borderColor: categoryBorderColors,
+                borderWidth: 1,
+                hoverOffset: 15
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        font: {
+                            size: 11
+                        },
+                        boxWidth: 15
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const revenue = context.raw;
+                            const percentage = Math.round((revenue / {{ total_sales|default:1 }}) * 100);
+                            return `$${revenue} (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            cutout: '60%'
+        }
+    });
+});
+</script>
 {% endblock %}

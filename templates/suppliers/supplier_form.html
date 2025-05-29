@@ -1,85 +1,142 @@
 {% extends 'base/layout.html' %}
 
 {% block title %}
-{% if supplier %}Edit Supplier - {{ supplier.name }}{% else %}Add New Supplier{% endif %} - Spectre Clothing
+{% if supplier %}{{ supplier.name }} - Supplier Management{% else %}New Supplier Entry{% endif %} - Spectre Operations
 {% endblock %}
 
 {% block content %}
-<div class="bg-white p-6 rounded-lg shadow-md">
-    <div class="text-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">
-            {% if supplier %}Edit Supplier: {{ supplier.name }}{% else %}Add New Supplier{% endif %}
-        </h1>
-    </div>
-    
-    <div class="max-w-2xl mx-auto">
-        <form method="post">
-            {% csrf_token %}
-            
-            <div class="mb-4">
-                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Company Name <span class="text-red-600">*</span></label>
-                <input type="text" name="name" id="name" 
-                       value="{{ supplier.name|default:'' }}" 
-                       required
-                       placeholder="Enter company name"
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
-            
-            <div class="mb-4">
-                <label for="contact_person" class="block text-sm font-medium text-gray-700 mb-1">Contact Person <span class="text-red-600">*</span></label>
-                <input type="text" name="contact_person" id="contact_person" 
-                       value="{{ supplier.contact_person|default:'' }}" 
-                       required
-                       placeholder="Enter contact person's name"
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
-            
-            <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-600">*</span></label>
-                <input type="email" name="email" id="email" 
-                       value="{{ supplier.email|default:'' }}" 
-                       required
-                       placeholder="supplier@example.com"
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
-            
-            <div class="mb-4">
-                <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-1">Phone Number <span class="text-red-600">*</span></label>
-                <input type="tel" name="phone_number" id="phone_number" 
-                       value="{{ supplier.phone_number|default:'' }}" 
-                       required
-                       placeholder="e.g. +1 234 567 8900"
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
-            
-            <div class="mb-6">
-                <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                <textarea name="address" id="address" rows="3" 
-                          placeholder="Enter company address"
-                          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ supplier.address|default:'' }}</textarea>
-                <p class="text-sm text-gray-500 mt-1">Optional business address information</p>
-            </div>
-            
-            <div class="flex items-center justify-between">
-                <div class="text-sm">
-                    <span class="text-red-600">*</span> Required fields
+<div class="bg-gray-100 py-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="pb-6 border-b border-gray-300 mb-8">
+            <h1 class="text-2xl font-semibold leading-8 text-gray-900">
+                {% if supplier %}
+                    Edit Supplier Information
+                {% else %}
+                    Register New Supplier
+                {% endif %}
+            </h1>
+            <p class="mt-1 text-sm leading-6 text-gray-700">
+                {% if supplier %}
+                    Manage and update the profile for <strong class="text-gray-900">{{ supplier.name }}</strong>.
+                {% else %}
+                    Complete the form to onboard a new supplier. Ensure accuracy for all entries.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="bg-white shadow-lg rounded-xl overflow-hidden">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="px-6 py-8 sm:p-8 space-y-8 divide-y divide-gray-200">
+
+                    <div>
+                        <h2 class="text-lg font-medium leading-7 text-gray-900 pt-6">Core Information</h2>
+                        <p class="mt-1 text-sm text-gray-600">Basic identification and primary contact details.</p>
+
+                        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+                            <div class="sm:col-span-3">
+                                <label for="name" class="block text-sm font-medium leading-6 text-gray-900">
+                                    Company Name <span class="text-red-600">*</span>
+                                </label>
+                                <div class="mt-2">
+                                    <input type="text" name="name" id="name"
+                                           value="{{ supplier.name|default:'' }}"
+                                           required
+                                           placeholder="Official Company Name"
+                                           class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="contact_person" class="block text-sm font-medium leading-6 text-gray-900">
+                                    Contact Person <span class="text-red-600">*</span>
+                                </label>
+                                <div class="mt-2">
+                                    <input type="text" name="contact_person" id="contact_person"
+                                           value="{{ supplier.contact_person|default:'' }}"
+                                           required
+                                           placeholder="Full Name"
+                                           class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-lg font-medium leading-7 text-gray-900 pt-8">Communication</h2>
+                        <p class="mt-1 text-sm text-gray-600">How we can reach the supplier.</p>
+
+                        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+                            <div class="sm:col-span-4">
+                                <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
+                                    Email Address <span class="text-red-600">*</span>
+                                </label>
+                                <div class="mt-2">
+                                    <input id="email" name="email" type="email"
+                                           value="{{ supplier.email|default:'' }}"
+                                           required
+                                           placeholder="official.contact@company.com"
+                                           class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <label for="phone_number" class="block text-sm font-medium leading-6 text-gray-900">
+                                    Phone Number <span class="text-red-600">*</span>
+                                </label>
+                                <div class="mt-2">
+                                    <input type="tel" name="phone_number" id="phone_number"
+                                           value="{{ supplier.phone_number|default:'' }}"
+                                           required
+                                           placeholder="e.g., +1 234 567 8900"
+                                           class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                         <h2 class="text-lg font-medium leading-7 text-gray-900 pt-8">Location Details</h2>
+                         <p class="mt-1 text-sm text-gray-600">Supplier's primary business address (optional).</p>
+
+                        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+                            <div class="col-span-full">
+                                <label for="address" class="block text-sm font-medium leading-6 text-gray-900">
+                                    Address
+                                </label>
+                                <div class="mt-2">
+                                    <textarea id="address" name="address" rows="4"
+                                              placeholder="Enter full street address, city, state, and postal code."
+                                              class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ supplier.address|default:'' }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex space-x-2">
-                    {% if supplier %}
-                    <a href="{% url 'suppliers:supplier_detail' supplier.id %}" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md transition duration-200">
-                        Cancel
-                    </a>
-                    {% else %}
-                    <a href="{% url 'suppliers:supplier_list' %}" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md transition duration-200">
-                        Cancel
-                    </a>
-                    {% endif %}
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded-md transition duration-200">
-                        {% if supplier %}Update Supplier{% else %}Add Supplier{% endif %}
-                    </button>
+
+                <div class="flex items-center justify-between gap-x-6 bg-gray-50 px-6 py-4 sm:px-8 border-t border-gray-200">
+                    <p class="text-sm text-gray-600">
+                        <span class="text-red-600 font-medium">*</span> Indicates a required field.
+                    </p>
+                    <div>
+                        {% if supplier %}
+                            <a href="{% url 'suppliers:supplier_detail' supplier.id %}" class="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-700">
+                                Cancel
+                            </a>
+                        {% else %}
+                             <a href="{% url 'suppliers:supplier_list' %}" class="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-700">
+                                Cancel
+                            </a>
+                        {% endif %}
+                        <button type="submit" class="ml-4 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            {% if supplier %}Update Supplier{% else %}Save Supplier{% endif %}
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}
