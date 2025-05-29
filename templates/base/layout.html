@@ -5,26 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Spectra Style{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/output.css?v={{ css_version|default:timestamp }}">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <style>
+        /* Styles for the background canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Ensure it's behind all other content */
+            background-color: #0a0f1f; /* Explicit very dark blue/purple background */
+        }
+        /* Ensure body allows canvas to be visible and other content flows on top */
+        body {
+            background-color: transparent; /* Make body transparent so canvas behind it is visible */
+            position: relative; /* Needed for z-index context if any child tries to go behind canvas */
+            font-family: 'Inter', sans-serif; /* Added default font for consistency */
+        }
+        /* Ensure main content sections have their defined backgrounds or are transparent as desired */
+        header, aside, footer {
+            position: relative; /* Ensures they stay above the fixed canvas */
+            z-index: 1;
+        }
+        main {
+            position: relative; /* Ensures it stays above the fixed canvas */
+            z-index: 1;
+            /* If main content should have its own background (e.g., light for readability): */
+            /* background-color: var(--color-light-background, white); */
+        }
+
+        /* Styling for sidebar links from original snippet (assumed to be in output.css or similar) */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: var(--color-text-secondary, #cbd5e1); /* Default if var not set */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            text-decoration: none;
+        }
+        .sidebar-link:hover {
+            background-color: var(--color-accent-hover, #4f46e5); /* Default if var not set */
+            color: var(--color-text-on-accent, white); /* Default if var not set */
+        }
+        .sidebar-link i {
+            margin-right: 0.75rem;
+            width: 1.25rem; /* Fixed width for icons */
+            text-align: center;
+        }
+        /* Logout button style (example) */
+        .btn-logout {
+            background-color: var(--color-accent, #6366f1); /* Default if var not set */
+            color: var(--color-text-on-accent, white);
+            border-radius: 0.375rem;
+            transition: background-color 0.2s ease-in-out;
+            text-decoration: none;
+        }
+        .btn-logout:hover {
+            background-color: var(--color-accent-hover, #4f46e5); /* Default if var not set */
+        }
+
+        /* Message styles (example) */
+        .messages .message-item {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem;
+            color: var(--color-text-primary, #1f2937); /* Default */
+        }
+        .messages .message-item.success {
+            background-color: var(--color-success-bg, #d1fae5); /* Default */
+            color: var(--color-success-text, #065f46); /* Default */
+        }
+        .messages .message-item.error {
+            background-color: var(--color-error-bg, #fee2e2); /* Default */
+            color: var(--color-error-text, #991b1b); /* Default */
+        }
+        .messages .message-item.info {
+            background-color: var(--color-info-bg, #dbeafe); /* Default */
+            color: var(--color-info-text, #1e40af); /* Default */
+        }
+        .messages .message-item.warning {
+            background-color: var(--color-warning-bg, #fef3c7); /* Default */
+            color: var(--color-warning-text, #92400e); /* Default */
+        }
+
+        /* Define CSS variables if not already in output.css for fallback/example */
+        :root {
+            --color-dark-elements: #1f2937; /* Example: Tailwind gray-800 */
+            --color-border-neutral: #374151; /* Example: Tailwind gray-700 */
+            --color-text-headings: #f9fafb;   /* Example: Tailwind gray-50 */
+            --color-text-primary: #111827;    /* Example: Tailwind gray-900 (for light backgrounds) */
+            --color-text-secondary: #d1d5db; /* Example: Tailwind gray-300 (for dark backgrounds) */
+            --color-accent: #6366f1;          /* Example: Tailwind indigo-500 */
+            --color-accent-hover: #4f46e5;    /* Example: Tailwind indigo-600 */
+            --color-text-on-accent: #ffffff;
+        }
+    </style>
+
     {% block extra_css %}{% endblock %}
 </head>
-<body class="min-h-screen flex flex-col"> 
-    <!-- Header -->
+<body class="min-h-screen flex flex-col">
+    <canvas id="particle-canvas"></canvas>
+
     <header class="text-white shadow-md" style="background-color: var(--color-dark-elements); border-bottom: 1px solid var(--color-border-neutral);">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <h1 class="text-2xl font-bold" style="color: var(--color-text-headings); letter-spacing: 0.08em;">SPECTRA STYLE</h1>
+                <h1 class="text-2xl font-bold font-rajdhani" style="color: var(--color-text-headings); letter-spacing: 0.08em;">SPECTRA STYLE</h1>
             </div>
             {% if user.is_authenticated %}
             <div class="flex items-center space-x-4">
                 <span style="color: var(--color-text-secondary);">Welcome, {{ user.get_full_name|default:user.username }}</span>
-                <a href="{% url 'accounts:logout' %}" class="btn btn-logout py-1 px-3">
+                <a href="{% url 'accounts:logout' %}" class="btn btn-logout py-1 px-3 text-sm">
                     <i class="fas fa-sign-out-alt mr-1"></i> Logout
                 </a>
             </div>
@@ -32,10 +128,8 @@
         </div>
     </header>
 
-    <!-- Main Content with Sidebar -->
     <div class="flex flex-1">
         {% if user.is_authenticated %}
-        <!-- Sidebar Navigation -->
         <aside class="w-64 py-6 px-4 hidden md:block" style="background-color: var(--color-dark-elements); border-right: 1px solid var(--color-border-neutral);">
             <nav>
                 <ul class="space-y-2">
@@ -91,8 +185,7 @@
         </aside>
         {% endif %}
 
-        <!-- Main Content -->
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-6 overflow-y-auto">
             {% if messages %}
                 <div class="mb-6 messages">
                     {% for message in messages %}
@@ -107,15 +200,133 @@
         </main>
     </div>
 
-    <!-- Footer -->
     <footer class="py-6" style="background-color: var(--color-dark-elements); border-top: 1px solid var(--color-border-neutral);">
         <div class="container mx-auto px-4 text-center">
             <p style="color: var(--color-text-secondary); font-size: 0.9rem;">&copy; {% now "Y" %} Spectra Style. All rights reserved. | Elevating Fashion with Cutting-Edge Design</p>
         </div>
     </footer>
 
-    <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js"></script>
+    
+    <script>
+        // Procedurally Generated Background Art Script
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let particlesArray;
+
+        // Function to set canvas dimensions
+        function setCanvasDimensions() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        setCanvasDimensions(); // Initial set
+
+        // Particle and line colors - Dark mode theme
+        const particleColor = 'rgba(70, 180, 200, 0.5)'; // Muted cyan/teal, semi-transparent
+        const lineColor = 'rgba(70, 180, 200, 0.1)';  // More transparent version for lines
+
+        // Particle class
+        class Particle {
+            constructor(x, y, directionX, directionY, size) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = particleColor;
+            }
+
+            // Method to draw individual particle
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            // Check particle position, move the particle, draw the particle
+            update() {
+                // Check if particle is still within canvas
+                if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+                    this.directionY = -this.directionY;
+                }
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        // Create particle array
+        function initParticles() {
+            particlesArray = [];
+            // Adjust number of particles based on screen size for better density
+            const numberOfParticles = (canvas.height * canvas.width) / 9000; // Keep density reasonable
+            for (let i = 0; i < numberOfParticles; i++) {
+                const size = (Math.random() * 1.8) + 0.7; // Particle size between 0.7 and 2.5 (slightly larger for visibility)
+                const x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                const y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                // Faster movement speed
+                const directionX = (Math.random() * 0.8) - 0.4; // Speed between -0.4 and 0.4
+                const directionY = (Math.random() * 0.8) - 0.4; // Speed between -0.4 and 0.4
+                particlesArray.push(new Particle(x, y, directionX, directionY, size));
+            }
+        }
+
+        // Animation loop
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            // Use the canvas's explicit background color for clearing
+            ctx.fillStyle = getComputedStyle(canvas).backgroundColor; // Use the CSS defined background
+            ctx.fillRect(0,0,innerWidth, innerHeight);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connectParticles();
+        }
+
+        // Check if particles are close enough to draw line between them
+        function connectParticles() {
+            let opacityValue = 1;
+            const connectionDistance = Math.min(canvas.width, canvas.height) * 0.09; // Slightly increased connection distance
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    const distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                                   + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (connectionDistance * connectionDistance)) { // Use squared distance for efficiency
+                        opacityValue = 1 - (distance / (connectionDistance * connectionDistance)); // Fade line with distance
+                        
+                        // Dynamically create the strokeStyle string with calculated opacity
+                        // Extract the RGB part and append the new alpha
+                        const rgbPart = lineColor.substring(lineColor.indexOf('(') + 1, lineColor.lastIndexOf(',')).trim();
+                        const newAlpha = opacityValue * parseFloat(lineColor.substring(lineColor.lastIndexOf(',') + 1, lineColor.lastIndexOf(')')).trim());
+                        ctx.strokeStyle = `rgba(${rgbPart}, ${newAlpha.toFixed(3)})`;
+                        
+                        ctx.lineWidth = 0.6; // Slightly thicker lines
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Resize event listener
+        window.addEventListener('resize', () => {
+            setCanvasDimensions();
+            initParticles(); // Re-initialize particles for new dimensions
+        });
+
+        // Start animation
+        initParticles();
+        animateParticles();
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>
