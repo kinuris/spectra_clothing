@@ -5,15 +5,24 @@
 {% endblock %}
 
 {% block content %}
-<div class="bg-white p-6 rounded-lg shadow-md">
-    <div class="mb-6">
-        <h1 class="text-2xl font-semibold text-gray-900">
-            {% if product %}Edit Product{% else %}Add New Product{% endif %}
-        </h1>
-    </div>
+<div class="bg-white p-6 rounded-lg shadow-md">        <div class="mb-6">
+            <h1 class="text-2xl font-semibold text-gray-900">
+                {% if product %}Edit Product{% else %}Add New Product{% endif %}
+            </h1>
+            {% if product %}
+            <p class="mt-2 text-sm text-gray-600">
+                Having trouble saving changes? 
+                <a href="{% url 'products:product_simple_edit' product.id %}" class="text-green-600 hover:underline font-medium">
+                    Try our simplified editor
+                </a>
+            </p>
+            {% endif %}
+        </div>
     
-    <form method="post" enctype="multipart/form-data" class="space-y-6">
+    <form method="post" enctype="multipart/form-data" class="space-y-6" id="productForm">
         {% csrf_token %}
+        <!-- Make sure this form includes the product ID if we're editing -->
+        {% if product %}<input type="hidden" name="product_id" value="{{ product.id }}">{% endif %}
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -140,6 +149,7 @@
             {% endif %}
         </div>
         
+        <!-- Regular submission buttons --> 
         <div class="flex justify-end space-x-3">
             {% if product %}
             <a href="{% url 'products:product_detail' product.id %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md transition duration-200">
@@ -150,11 +160,127 @@
                 Cancel
             </a>
             {% endif %}
-            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
-                {% if product %}Save Changes{% else %}Create Product{% endif %}
+            
+            <!-- Only show regular submit for new products -->
+            {% if not product %}
+            <button type="submit" id="submitBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200">
+                Create Product
             </button>
+            {% endif %}
+            
+            <!-- For edit mode, use the force update button -->
+            {% if product %}
+            <a href="{% url 'products:product_force_update' product.id %}" 
+               onclick="return submitViaForce(event)" 
+               class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-200 text-center">
+                Save Changes
+            </a>
+            {% endif %}
+        </div>
         </div>
     </form>
+    
+    {% block extra_js %}
+    <script>
+        // Updated form submission function with file upload support
+        function submitViaForce(e) {
+            e.preventDefault();
+            console.log('Force save clicked');
+            
+            // Get the original form
+            const form = document.getElementById('productForm');
+            
+            // Create a FormData object to handle file uploads
+            const formData = new FormData();
+            
+            // Copy CSRF token
+            const csrf = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (csrf) {
+                formData.append('csrfmiddlewaretoken', csrf.value);
+            }
+            
+            // Manually add required simple fields
+            const fields = [
+                'name', 'sku', 'category', 'supplier', 
+                'cost_price', 'selling_price', 'description',
+                'primary_image', 'product_id'
+            ];
+            
+            fields.forEach(fieldName => {
+                const field = document.querySelector(`[name="${fieldName}"]`);
+                if (field) {
+                    // Handle different input types appropriately
+                    if (field.tagName === 'SELECT') {
+                        formData.append(fieldName, field.options[field.selectedIndex].value);
+                    } else if (field.tagName === 'TEXTAREA') {
+                        formData.append(fieldName, field.value);
+                    } else {
+                        formData.append(fieldName, field.value);
+                    }
+                }
+            });
+            
+            // Handle file input (images)
+            const fileInput = document.querySelector('input[type="file"][name="images"]');
+            if (fileInput && fileInput.files.length > 0) {
+                console.log(`Found ${fileInput.files.length} files to upload`);
+                // Add each selected file to the FormData object
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    formData.append('images', fileInput.files[i]);
+                    console.log(`Added file: ${fileInput.files[i].name} (${fileInput.files[i].size} bytes)`);
+                }
+            } else {
+                console.log('No files selected for upload');
+            }
+            
+            // Display a saving indicator
+            e.target.textContent = 'Saving...';
+            e.target.classList.add('opacity-75', 'cursor-not-allowed');
+            
+            // Send the form data using fetch API
+            fetch(e.target.href, {
+                method: 'POST',
+                body: formData,
+                // Don't set Content-Type header, it will be set automatically with boundary
+                credentials: 'same-origin' // Include cookies for CSRF authentication
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response redirected:', response.redirected);
+                
+                if (response.redirected) {
+                    console.log('Redirecting to:', response.url);
+                    window.location.href = response.url;
+                } else {
+                    return response.text().then(text => {
+                        // If not redirected, check for errors
+                        console.log('Response text:', text);
+                        
+                        // Check if the response contains any error messages
+                        if (text.includes('error') || text.includes('Error')) {
+                            alert('There was an issue saving the product. Please check the console for details.');
+                            e.target.textContent = 'Save Changes';
+                            e.target.classList.remove('opacity-75', 'cursor-not-allowed');
+                        } else {
+                            // Redirect to product detail page (assuming success)
+                            const productId = document.querySelector('input[name="product_id"]').value;
+                            console.log('Redirecting to product detail page:', `/products/${productId}/`);
+                            window.location.href = `/products/${productId}/`;
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                alert('Error saving product. Please try again.');
+                e.target.textContent = 'Save Changes';
+                e.target.classList.remove('opacity-75', 'cursor-not-allowed');
+            });
+            
+            return false;
+        }
+    </script>
+    {% endblock %}
 </div>
 {% endblock %}
 
