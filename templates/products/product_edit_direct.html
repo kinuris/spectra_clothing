@@ -1,0 +1,38 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}Processing Edit - Spectre Clothing{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+    <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800 text-center">Processing Product Update</h1>
+        <p class="text-center mt-4">Please wait while we process your changes...</p>
+        <div class="flex justify-center mt-6">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+    </div>
+    
+    <form id="directForm" method="post" action="{% url 'products:product_edit' product_id %}" class="hidden">
+        {% csrf_token %}
+        <input type="hidden" name="name" value="{{ name }}">
+        <input type="hidden" name="sku" value="{{ sku }}">
+        <input type="hidden" name="category" value="{{ category_id }}">
+        <input type="hidden" name="supplier" value="{{ supplier_id|default:'' }}">
+        <input type="hidden" name="cost_price" value="{{ cost_price }}">
+        <input type="hidden" name="selling_price" value="{{ selling_price }}">
+        <input type="hidden" name="description" value="{{ description|default:'' }}">
+        <input type="hidden" name="primary_image" value="{{ primary_image_id|default:'' }}">
+        <input type="hidden" name="direct_submit" value="true">
+    </form>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            document.getElementById('directForm').submit();
+        }, 500);
+    });
+</script>
+{% endblock %}
+{% endblock %}

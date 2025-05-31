@@ -207,15 +207,26 @@
             ];
             
             fields.forEach(fieldName => {
-                const field = document.querySelector(`[name="${fieldName}"]`);
-                if (field) {
-                    // Handle different input types appropriately
-                    if (field.tagName === 'SELECT') {
-                        formData.append(fieldName, field.options[field.selectedIndex].value);
-                    } else if (field.tagName === 'TEXTAREA') {
-                        formData.append(fieldName, field.value);
+                if (fieldName === 'primary_image') {
+                    // Handle radio buttons for primary image selection
+                    const checkedRadio = document.querySelector(`input[name="primary_image"]:checked`);
+                    if (checkedRadio) {
+                        formData.append(fieldName, checkedRadio.value);
+                        console.log(`Primary image selected: ${checkedRadio.value}`);
                     } else {
-                        formData.append(fieldName, field.value);
+                        console.log('No primary image selected');
+                    }
+                } else {
+                    const field = document.querySelector(`[name="${fieldName}"]`);
+                    if (field) {
+                        // Handle different input types appropriately
+                        if (field.tagName === 'SELECT') {
+                            formData.append(fieldName, field.options[field.selectedIndex].value);
+                        } else if (field.tagName === 'TEXTAREA') {
+                            formData.append(fieldName, field.value);
+                        } else {
+                            formData.append(fieldName, field.value);
+                        }
                     }
                 }
             });
