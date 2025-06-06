@@ -1,0 +1,295 @@
+/* static/css/input.css */
+@tailwind base;
+
+@layer base {
+  :root {
+    --color-dark-base: #1A1A1A; /* Deep Charcoal */
+    --color-dark-elements: #222222; /* Slightly Lighter Dark for Header/Footer/Sidebar */
+    --color-true-black: #000000;
+
+    --color-accent-primary: #008ECB; /* Refined Electric Blue */
+    --color-accent-primary-darker: #0070A0; /* Darker Refined Electric Blue for hover */
+    --color-accent-primary-rgb: 0,142,203; /* RGB for use in rgba */
+    --color-accent-secondary: #3A79C1; /* Refined Professional Blue */
+    
+    --color-border-neutral: #404040; /* Neutral Border Color */
+    --color-border-input: #555555; /* Slightly lighter for inputs */
+
+    --color-text-headings: #F0F0F0; /* Bright White/Off-White for Headings */
+    --color-text-primary: #E0E0E0;  /* Main Body Text */
+    --color-text-secondary: #B0B0B0; /* Secondary/Subtle Text */
+    --color-text-on-accent: #FFFFFF; /* Text on primary accent buttons */
+    --color-text-dark: #1A1A1A; /* For light backgrounds if any */
+  }
+
+  body {
+    background-color: var(--color-dark-base);
+    color: var(--color-text-primary);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--color-text-headings);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 { font-size: 2.5rem; font-weight: 700; }
+  h2 { font-size: 2.0rem; font-weight: 600; }
+  h3 { font-size: 1.6rem; font-weight: 500; }
+  h4 { font-size: 1.4rem; font-weight: 500; }
+  h5 { font-size: 1.2rem; font-weight: 500; }
+  h6 { font-size: 1.1rem; font-weight: 500; }
+
+  a {
+    color: var(--color-accent-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  a:hover {
+    color: var(--color-accent-primary-darker);
+  }
+
+  /* Base form elements - but exclude ones with explicit Tailwind classes */
+  input[type="text"]:not([class*="text-"]), 
+  input[type="email"]:not([class*="text-"]), 
+  input[type="password"]:not([class*="text-"]), 
+  input[type="search"]:not([class*="text-"]), 
+  textarea:not([class*="text-"]), 
+  select:not([class*="text-"]) {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-border-input);
+    color: var(--color-text-primary);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  input[type="text"]:focus, 
+  input[type="email"]:focus, 
+  input[type="password"]:focus, 
+  input[type="search"]:focus, 
+  textarea:focus, 
+  select:focus {
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 0 2px rgba(var(--color-accent-primary-rgb), 0.25);
+    outline: none;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+
+  th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-neutral);
+  }
+
+  th {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    color: var(--color-text-headings);
+    background-color: rgba(var(--color-accent-primary-rgb), 0.05);
+  }
+
+  tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+}
+
+@tailwind components;
+
+@layer components {
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background-color: var(--color-accent-primary);
+    color: var(--color-text-on-accent);
+    border-color: var(--color-accent-primary);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-accent-primary-darker);
+    color: var(--color-text-on-accent);
+    border-color: var(--color-accent-primary-darker);
+    box-shadow: none; 
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--color-accent-secondary);
+    border-color: var(--color-accent-secondary);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-accent-secondary);
+    color: var(--color-text-on-accent);
+    box-shadow: none;
+  }
+  
+  .btn-logout {
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-neutral);
+  }
+
+  .btn-logout:hover {
+    background-color: var(--color-border-neutral);
+    color: var(--color-text-primary);
+    box-shadow: none;
+  }
+
+  .sidebar-link {
+    color: var(--color-text-primary);
+    display: block;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .sidebar-link:hover {
+    background-color: rgba(var(--color-accent-primary-rgb), 0.1);
+    color: var(--color-accent-primary);
+  }
+
+  .sidebar-link i {
+    color: var(--color-text-secondary);
+    margin-right: 0.5rem;
+    width: 1.25rem;
+    text-align: center;
+  }
+
+  .messages .success {
+    background-color: rgba(var(--color-accent-primary-rgb), 0.1);
+    color: var(--color-accent-primary);
+    border-left: 4px solid var(--color-accent-primary);
+  }
+
+  .messages .error {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #DC3545;
+    border-left: 4px solid #DC3545;
+  }
+
+  .messages .warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #FFC107;
+    border-left: 4px solid #FFC107;
+  }
+
+  .messages .info {
+    background-color: rgba(108, 117, 125, 0.1);
+    color: #6C757D;
+    border-left: 4px solid #6C757D;
+  }
+
+  .message-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+
+  /* Card styling for dashboard and other sections */
+  .card {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-border-neutral);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .card-header {
+    padding: 1rem;
+    background-color: rgba(var(--color-accent-primary-rgb), 0.05);
+    border-bottom: 1px solid var(--color-border-neutral);
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .card-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--color-border-neutral);
+  }
+
+  /* Form group styling */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+
+  .form-control {
+    width: 100%;
+  }
+
+  .form-error {
+    color: #DC3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+
+  /* Status badges */
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+  }
+
+  .badge-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.2);
+  }
+
+  .badge-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+  }
+
+  .badge-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.2);
+  }
+
+  .badge-info {
+    background-color: rgba(23, 162, 184, 0.1);
+    color: #17a2b8;
+    border: 1px solid rgba(23, 162, 184, 0.2);
+  }
+}
+
+@tailwind utilities;/* Test comment */
