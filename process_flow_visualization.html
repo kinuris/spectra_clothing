@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectre Clothing - Process Flow Diagrams</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            border-bottom: 3px solid #4f46e5;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4f46e5;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .process-flow {
+            margin: 30px 0;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .flow-step {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            min-width: 140px;
+            transition: transform 0.2s ease;
+        }
+        
+        .flow-step:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+        
+        .flow-arrow {
+            font-size: 1.8rem;
+            color: #6366f1;
+            font-weight: bold;
+        }
+        
+        .decision-point {
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin: 10px 5px;
+            display: inline-block;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);
+        }
+        
+        .input-output {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            gap: 20px;
+        }
+        
+        .input-box, .output-box {
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981;
+        }
+        
+        .output-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .input-box h4, .output-box h4 {
+            margin-top: 0;
+            color: #1f2937;
+            font-size: 1.2rem;
+        }
+        
+        .input-box ul, .output-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .input-box li, .output-box li {
+            margin: 8px 0;
+            font-weight: 500;
+        }
+        
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .workflow-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #4f46e5;
+            transition: transform 0.2s ease;
+        }
+        
+        .workflow-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .workflow-card h3 {
+            color: #4f46e5;
+            margin-top: 0;
+            font-size: 1.3rem;
+        }
+        
+        .status-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 10px;
+        }
+        
+        .status-item {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 6px rgba(100, 116, 139, 0.3);
+        }
+        
+        .status-item.pending { background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); }
+        .status-item.processing { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+        .status-item.shipped { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .status-item.delivered { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .status-item.cancelled { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .kpi-card {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-top: 3px solid #4f46e5;
+        }
+        
+        .kpi-card h4 {
+            margin: 0 0 10px 0;
+            color: #4f46e5;
+            font-size: 1.1rem;
+        }
+        
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin: 10px 0;
+        }
+        
+        .integration-diagram {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .data-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .data-entity {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .data-arrow {
+            color: #6366f1;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .flow-container {
+                flex-direction: column;
+            }
+            
+            .input-output {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+            
+            .status-flow {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Spectre Clothing System - Process Flow Visualization</h1>
+        
+        <h2>🛍️ Product Management Process</h2>
+        <div class="process-flow">
+            <div class="flow-container">
+                <div class="flow-step">Supplier Info</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Product Creation</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Category Assignment</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Image Upload</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Product Catalog</div>
+            </div>
+            
+            <div class="input-output">
+                <div class="input-box">
+                    <h4>📥 Inputs</h4>
+                    <ul>
+                        <li>Product specifications (name, SKU, prices)</li>
+                        <li>Supplier information</li>
+                        <li>Category selection</li>
+                        <li>Product images</li>
+                        <li>Product descriptions</li>
+                    </ul>
+                </div>
+                <div class="output-box">
+                    <h4>📤 Outputs</h4>
+                    <ul>
+                        <li>Product record in database</li>
+                        <li>Product available in catalog</li>
+                        <li>Product ready for variant creation</li>
+                        <li>Searchable product listing</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div>
+                <strong>Decision Points:</strong>
+                <div class="decision-point">Is SKU unique?</div>
+                <div class="decision-point">Does category exist?</div>
+                <div class="decision-point">Is supplier selected?</div>
+                <div class="decision-point">Are images provided?</div>
+            </div>
+        </div>
+
+        <h2>📦 Inventory Management Process</h2>
+        <div class="process-flow">
+            <div class="flow-container">
+                <div class="flow-step">Product Selection</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Variant Creation</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Stock Assignment</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Inventory Tracking</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Stock Alerts</div>
+            </div>
+            
+            <div class="input-output">
+                <div class="input-box">
+                    <h4>📥 Inputs</h4>
+                    <ul>
+                        <li>Existing products</li>
+                        <li>Size and color options</li>
+                        <li>Initial stock quantities</li>
+                        <li>Reorder levels</li>
+                        <li>Stock movements (in/out/adjustments)</li>
+                    </ul>
+                </div>
+                <div class="output-box">
+                    <h4>📤 Outputs</h4>
+                    <ul>
+                        <li>Product variants with stock levels</li>
+                        <li>Inventory adjustment records</li>
+                        <li>Low stock alerts</li>
+                        <li>Out of stock notifications</li>
+                        <li>Stock movement audit trail</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div>
+                <strong>Decision Points:</strong>
+                <div class="decision-point">Is variant combination unique?</div>
+                <div class="decision-point">Is quantity > 0?</div>
+                <div class="decision-point">Stock below reorder level?</div>
+                <div class="decision-point">Stock completely depleted?</div>
+            </div>
+        </div>
+
+        <h2>🛒 Order Management Process</h2>
+        <div class="process-flow">
+            <div class="flow-container">
+                <div class="flow-step">Customer Info</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Product Selection</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Stock Validation</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Order Creation</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Fulfillment</div>
+            </div>
+            
+            <div>
+                <h4>Order Status Workflow:</h4>
+                <div class="status-flow">
+                    <div class="status-item pending">PENDING</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="status-item processing">PROCESSING</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="status-item">AWAITING PAYMENT</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="status-item shipped">SHIPPED</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="status-item delivered">DELIVERED</div>
+                </div>
+                <div style="text-align: center; margin-top: 10px;">
+                    <div class="status-item cancelled">CANCELLED (available at any stage)</div>
+                </div>
+            </div>
+            
+            <div class="input-output">
+                <div class="input-box">
+                    <h4>📥 Inputs</h4>
+                    <ul>
+                        <li>Customer information (name, email, phone)</li>
+                        <li>Product variant selections</li>
+                        <li>Quantities requested</li>
+                        <li>Order notes and instructions</li>
+                    </ul>
+                </div>
+                <div class="output-box">
+                    <h4>📤 Outputs</h4>
+                    <ul>
+                        <li>Order records with unique IDs</li>
+                        <li>Order items breakdown</li>
+                        <li>Customer order history</li>
+                        <li>Inventory adjustments</li>
+                        <li>Order status updates</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div>
+                <strong>Decision Points:</strong>
+                <div class="decision-point">Does customer exist?</div>
+                <div class="decision-point">Are quantities valid?</div>
+                <div class="decision-point">Sufficient stock available?</div>
+                <div class="decision-point">Auto-adjust stock?</div>
+            </div>
+        </div>
+
+        <h2>📊 Analytics & Reporting Process</h2>
+        <div class="process-flow">
+            <div class="flow-container">
+                <div class="flow-step">Order Data</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Sales Analysis</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Performance Metrics</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Visual Reports</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Business Insights</div>
+            </div>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <h4>Total Sales Revenue</h4>
+                    <div class="kpi-value">$XX,XXX</div>
+                </div>
+                <div class="kpi-card">
+                    <h4>Total Orders</h4>
+                    <div class="kpi-value">XXX</div>
+                </div>
+                <div class="kpi-card">
+                    <h4>Average Order Value</h4>
+                    <div class="kpi-value">$XXX</div>
+                </div>
+                <div class="kpi-card">
+                    <h4>Growth Rate</h4>
+                    <div class="kpi-value">+XX%</div>
+                </div>
+            </div>
+            
+            <div class="input-output">
+                <div class="input-box">
+                    <h4>📥 Inputs</h4>
+                    <ul>
+                        <li>Historical order data</li>
+                        <li>Product sales information</li>
+                        <li>Time period selections</li>
+                        <li>Category classifications</li>
+                    </ul>
+                </div>
+                <div class="output-box">
+                    <h4>📤 Outputs</h4>
+                    <ul>
+                        <li>Sales dashboards</li>
+                        <li>Performance reports</li>
+                        <li>Category analysis charts</li>
+                        <li>Product ranking tables</li>
+                        <li>Trend visualizations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <h2>🔗 System Integration & Data Flow</h2>
+        <div class="integration-diagram">
+            <h4>Cross-Process Data Dependencies</h4>
+            
+            <div class="data-flow">
+                <div class="data-entity">Products</div>
+                <div class="data-arrow">→</div>
+                <div class="data-entity">Product Variants</div>
+                <div class="data-arrow">→</div>
+                <div class="data-entity">Inventory Tracking</div>
+            </div>
+            
+            <div class="data-flow">
+                <div class="data-entity">Customers</div>
+                <div class="data-arrow">→</div>
+                <div class="data-entity">Orders</div>
+                <div class="data-arrow">→</div>
+                <div class="data-entity">Order Items</div>
+                <div class="data-arrow">→</div>
+                <div class="data-entity">Inventory Updates</div>
+            </div>
+            
+            <div class="data-flow">
+                <div class="data-entity">Sales Data</div>
+                <div class="data-arrow">→</div>
+                <div class="data-entity">Analytics Processing</div>
+                <div class="data-arrow">→</div>
+                <div class="data-entity">Dashboard Reports</div>
+            </div>
+            
+            <div class="data-flow">
+                <div class="data-entity">Suppliers</div>
+                <div class="data-arrow">→</div>
+                <div class="data-entity">Product Catalog</div>
+                <div class="data-arrow">→</div>
+                <div class="data-entity">Inventory Management</div>
+            </div>
+        </div>
+
+        <h2>🎯 Key Workflows</h2>
+        <div class="workflow-grid">
+            <div class="workflow-card">
+                <h3>Product-to-Sale</h3>
+                <p><strong>Flow:</strong> Product Creation → Variant Creation → Stock Assignment → Order Processing → Sales Analytics</p>
+                <p><strong>Key Activities:</strong> Catalog management, inventory setup, order fulfillment, performance tracking</p>
+            </div>
+            
+            <div class="workflow-card">
+                <h3>Inventory Update</h3>
+                <p><strong>Flow:</strong> Stock Adjustment → Inventory Update → Alert Generation → Dashboard Notification</p>
+                <p><strong>Key Activities:</strong> Stock movements, reorder alerts, real-time monitoring</p>
+            </div>
+            
+            <div class="workflow-card">
+                <h3>Order-to-Inventory</h3>
+                <p><strong>Flow:</strong> Order Creation → Stock Validation → Order Processing → Inventory Deduction → Analytics Update</p>
+                <p><strong>Key Activities:</strong> Order validation, stock allocation, fulfillment tracking</p>
+            </div>
+            
+            <div class="workflow-card">
+                <h3>Reporting</h3>
+                <p><strong>Flow:</strong> Transaction Data → Analytics Processing → Report Generation → Dashboard Display</p>
+                <p><strong>Key Activities:</strong> Data aggregation, trend analysis, performance visualization</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: 10px; text-align: center;">
+            <h3 style="color: #4f46e5; margin-bottom: 15px;">🚀 Process Optimization Opportunities</h3>
+            <p><strong>Strengths:</strong> Clear data relationships, comprehensive audit trails, role-based access control, real-time inventory tracking</p>
+            <p><strong>Enhancement Areas:</strong> Automated reordering, batch processing, predictive analytics, workflow automation, external integrations</p>
+        </div>
+    </div>
+</body>
+</html>

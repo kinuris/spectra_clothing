@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectre Clothing - Service Level Agreement (SLA)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            border-bottom: 3px solid #4f46e5;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #4f46e5;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-left: 4px solid #4f46e5;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #1e293b;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        .sla-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .sla-section h3 {
+            margin-top: 0;
+            color: #4f46e5;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        th {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .metric-highlight {
+            font-weight: bold;
+            color: #10b981;
+        }
+        .support-tier {
+            border: 1px solid #cbd5e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #f8fafc;
+        }
+        .support-tier h4 {
+            margin-top: 0;
+            color: #334155;
+        }
+        .notes {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        .notes p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Spectre Clothing - Service Level Agreement (SLA)</h1>
+
+        <div class="sla-section">
+            <h3>1. Introduction & Purpose</h3>
+            <p>This Service Level Agreement (SLA) outlines the commitments of the Spectre Clothing e-commerce platform provider (hereinafter "Provider") to its users and stakeholders (hereinafter "Client") regarding system availability, performance, and support. The purpose of this SLA is to establish clear expectations and ensure a high quality of service.</p>
+            <p><strong>Effective Date:</strong> May 31, 2025</p>
+            <p><strong>Review Period:</strong> Annually</p>
+        </div>
+
+        <div class="sla-section">
+            <h3>2. Scope of Services</h3>
+            <p>This SLA applies to the core Spectre Clothing e-commerce platform, including:</p>
+            <ul>
+                <li>Product browsing and purchasing functionalities.</li>
+                <li>User account management.</li>
+                <li>Order processing and tracking.</li>
+                <li>Inventory management system (for internal users).</li>
+                <li>Supplier management portal (for internal users).</li>
+                <li>Analytics and reporting dashboard (for internal users).</li>
+            </ul>
+            <p>This SLA does not cover third-party integrations or services beyond the direct control of the Provider (e.g., payment gateways, shipping provider APIs), although the Provider will make reasonable efforts to ensure smooth interaction with these services.</p>
+        </div>
+
+        <h2>📊 Service Level Metrics</h2>
+
+        <div class="sla-section">
+            <h3>3. Service Availability</h3>
+            <p>The Provider commits to maintaining high availability for the Spectre Clothing platform.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service Component</th>
+                        <th>Target Uptime</th>
+                        <th>Measurement Period</th>
+                        <th>Exclusions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Customer-Facing Storefront</td>
+                        <td><span class="metric-highlight">99.9%</span></td>
+                        <td>Monthly</td>
+                        <td>Scheduled Maintenance, Force Majeure</td>
+                    </tr>
+                    <tr>
+                        <td>Admin & Internal Dashboards</td>
+                        <td><span class="metric-highlight">99.5%</span></td>
+                        <td>Monthly</td>
+                        <td>Scheduled Maintenance, Force Majeure</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>Scheduled Maintenance:</strong> The Provider will notify the Client at least 48 hours in advance of any scheduled maintenance. Maintenance windows will typically be during off-peak hours (e.g., 1:00 AM - 4:00 AM local time) and will not exceed 4 hours per month unless otherwise agreed.</p>
+        </div>
+
+        <div class="sla-section">
+            <h3>4. System Performance & Response Times</h3>
+            <p>The Provider commits to maintaining optimal system performance for a satisfactory user experience.</p>
+            <h4>4.1. Web Application Response Time</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User Action Category</th>
+                        <th>Target Response Time (95th Percentile)</th>
+                        <th>Measurement Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Product Page Load</td>
+                        <td><span class="metric-highlight">&lt; 2 seconds</span></td>
+                        <td>Server-side + Client-side monitoring</td>
+                    </tr>
+                    <tr>
+                        <td>Add to Cart / Checkout Steps</td>
+                        <td><span class="metric-highlight">&lt; 3 seconds</span></td>
+                        <td>Server-side + Client-side monitoring</td>
+                    </tr>
+                    <tr>
+                        <td>Admin Dashboard Page Loads</td>
+                        <td><span class="metric-highlight">&lt; 4 seconds</span></td>
+                        <td>Server-side monitoring</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>4.2. API Response Time (for integrated services)</h4>
+             <table>
+                <thead>
+                    <tr>
+                        <th>API Endpoint Category</th>
+                        <th>Target Response Time (95th Percentile)</th>
+                        <th>Measurement Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Core Data Retrieval (e.g., product info, order status)</td>
+                        <td><span class="metric-highlight">&lt; 500 ms</span></td>
+                        <td>API gateway monitoring</td>
+                    </tr>
+                    <tr>
+                        <td>Data Mutation (e.g., order creation, inventory update)</td>
+                        <td><span class="metric-highlight">&lt; 1000 ms</span></td>
+                        <td>API gateway monitoring</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sla-section">
+            <h3>5. Support Services</h3>
+            <p>The Provider will offer technical support for issues related to the Spectre Clothing platform.</p>
+            <h4>5.1. Support Channels & Availability</h4>
+            <ul>
+                <li><strong>Helpdesk Portal:</strong> Available 24/7 for ticket submission.</li>
+                <li><strong>Email Support:</strong> support@spectreclothing.com - Monitored during business hours.</li>
+                <li><strong>Phone Support (for Critical Issues):</strong> Available during extended business hours.</li>
+            </ul>
+            <p><strong>Business Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM (Local Time)</p>
+            <p><strong>Extended Business Hours (for Critical Issues):</strong> Monday - Sunday, 7:00 AM - 10:00 PM (Local Time)</p>
+
+            <h4>5.2. Support Response & Resolution Times</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Issue Priority</th>
+                        <th>Definition</th>
+                        <th>Target Initial Response Time</th>
+                        <th>Target Resolution Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Critical (P1)</strong></td>
+                        <td>System outage, major functionality unavailable, significant business impact.</td>
+                        <td><span class="metric-highlight">1 hour</span> (within extended business hours)</td>
+                        <td><span class="metric-highlight">4 hours</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>High (P2)</strong></td>
+                        <td>Significant functionality impaired, moderate business impact, no workaround.</td>
+                        <td><span class="metric-highlight">4 business hours</span></td>
+                        <td><span class="metric-highlight">1 business day</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Medium (P3)</strong></td>
+                        <td>Minor functionality impaired, low business impact, workaround available.</td>
+                        <td><span class="metric-highlight">1 business day</span></td>
+                        <td><span class="metric-highlight">3 business days</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Low (P4)</strong></td>
+                        <td>General inquiries, feature requests, cosmetic issues.</td>
+                        <td><span class="metric-highlight">2 business days</span></td>
+                        <td><span class="metric-highlight">As per development schedule</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><em>Initial Response Time: Time taken to acknowledge the issue and assign a support resource.</em></p>
+            <p><em>Resolution Time: Time taken to resolve the issue or provide a viable workaround. Complex issues may require longer resolution times, which will be communicated.</em></p>
+        </div>
+
+        <div class="sla-section">
+            <h3>6. Client Responsibilities</h3>
+            <p>To ensure the effective provision of services, the Client is expected to:</p>
+            <ul>
+                <li>Provide accurate and timely information when reporting issues.</li>
+                <li>Cooperate with the Provider's support personnel in diagnosing and resolving issues.</li>
+                <li>Ensure their own systems and internet connectivity are functioning correctly.</li>
+                <li>Adhere to the terms of use of the Spectre Clothing platform.</li>
+            </ul>
+        </div>
+
+        <div class="sla-section">
+            <h3>7. Provider Responsibilities</h3>
+            <p>The Provider is responsible for:</p>
+            <ul>
+                <li>Meeting the service levels defined in this SLA.</li>
+                <li>Proactively monitoring system performance and availability.</li>
+                <li>Implementing security measures to protect platform and data integrity.</li>
+                <li>Communicating planned maintenance and unplanned outages in a timely manner.</li>
+                <li>Providing regular reports on SLA performance upon request.</li>
+            </ul>
+        </div>
+        
+        <div class="sla-section">
+            <h3>8. SLA Exclusions</h3>
+            <p>This SLA does not apply to service interruptions or performance issues resulting from:</p>
+            <ul>
+                <li>Force Majeure events (e.g., natural disasters, acts of war, widespread internet outages).</li>
+                <li>Client-side issues (e.g., local network problems, browser incompatibilities not specified as supported, misuse of the platform).</li>
+                <li>Failures of third-party services not directly controlled by the Provider.</li>
+                <li>Activities outside the scope of defined services.</li>
+                <li>Denial of Service (DoS) or Distributed Denial of Service (DDoS) attacks, though the Provider will make reasonable efforts to mitigate such attacks.</li>
+            </ul>
+        </div>
+
+        <div class="sla-section">
+            <h3>9. SLA Review and Reporting</h3>
+            <p>This SLA will be reviewed annually by the Provider and Client representatives. The Provider will make SLA performance reports available to the Client on a quarterly basis, or as otherwise agreed.</p>
+        </div>
+
+        <div class="notes">
+            <p><strong>Note:</strong> This document is a proposed Service Level Agreement. Specific terms, conditions, and remedies for SLA breaches would typically be detailed in a legally binding contract between Spectre Clothing and its clients or defined by internal operational standards.</p>
+        </div>
+
+    </div>
+</body>
+</html>

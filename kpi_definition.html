@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectre Clothing - KPI Definition & Measurement Framework</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            border-bottom: 3px solid #4f46e5;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4f46e5;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-left: 4px solid #4f46e5;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #1e293b;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .kpi-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #4f46e5;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .kpi-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .kpi-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+        
+        .kpi-title {
+            color: #4f46e5;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .kpi-category {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .measurement-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #10b981;
+        }
+        
+        .target-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .calculation-formula {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4f46e5;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .measurement-frequency {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            color: #065f46;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 10px 5px;
+            font-size: 0.9rem;
+        }
+        
+        .data-source {
+            background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
+            color: #5b21b6;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .benchmark-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .benchmark-table th {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .benchmark-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .benchmark-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        .implementation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .implementation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #10b981;
+        }
+        
+        .implementation-card h4 {
+            color: #10b981;
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        
+        .code-snippet {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .alert-box {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 1px solid #f87171;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .alert-box h4 {
+            color: #dc2626;
+            margin-top: 0;
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border: 1px solid #4ade80;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .success-box h4 {
+            color: #16a34a;
+            margin-top: 0;
+        }
+        
+        .process-link {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid #38bdf8;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .process-link h5 {
+            color: #0369a1;
+            margin: 0 0 10px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .implementation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metric-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Spectre Clothing KPI Definition & Measurement Framework</h1>
+        
+        <div class="success-box">
+            <h4>🎯 KPI Framework Objective</h4>
+            <p>This framework defines key performance indicators (KPIs) to measure the effectiveness, efficiency, and success of the Spectre Clothing e-commerce system. Each KPI is tied to specific business processes and provides actionable insights for continuous improvement.</p>
+        </div>
+
+        <h2>🔑 Core System KPIs</h2>
+        
+        <div class="kpi-grid">
+            <!-- KPI 1: Order Fulfillment Efficiency -->
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-icon">🚀</div>
+                    <div>
+                        <h3 class="kpi-title">Order Fulfillment Efficiency</h3>
+                        <div class="kpi-category">OPERATIONAL EFFICIENCY</div>
+                    </div>
+                </div>
+                
+                <div class="measurement-section">
+                    <h4>📏 Measurement Method</h4>
+                    <p><strong>Definition:</strong> Percentage of orders successfully processed from creation to completion within target timeframes.</p>
+                    
+                    <div class="calculation-formula">
+OFE = (Orders Completed Within Target Time / Total Orders) × 100%
+
+Where:
+- Orders Completed Within Target Time: Orders that progress from 
+  PENDING → PROCESSING → SHIPPED → DELIVERED within SLA
+- Total Orders: All orders created in the measurement period
+                    </div>
+                    
+                    <p><strong>Data Sources:</strong></p>
+                    <div class="data-source">orders.models.Order</div>
+                    <div class="data-source">orders.models.OrderItem</div>
+                    <div class="data-source">Order status timestamps</div>
+                    
+                    <div class="measurement-frequency">Daily Measurement</div>
+                    <div class="measurement-frequency">Weekly Reporting</div>
+                </div>
+                
+                <div class="target-section">
+                    <h4>🎯 Target Values & Benchmarks</h4>
+                    <table class="benchmark-table">
+                        <thead>
+                            <tr>
+                                <th>Performance Level</th>
+                                <th>Target Range</th>
+                                <th>Action Required</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Excellent</strong></td>
+                                <td>≥ 95%</td>
+                                <td>Maintain processes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Good</strong></td>
+                                <td>85% - 94%</td>
+                                <td>Minor optimizations</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Acceptable</strong></td>
+                                <td>75% - 84%</td>
+                                <td>Process review needed</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Poor</strong></td>
+                                <td>< 75%</td>
+                                <td>Immediate intervention</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="process-link">
+                        <h5>🔗 Related Process</h5>
+                        <p>Directly measures the <strong>Order Management Process</strong> efficiency from customer order creation through final delivery.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI 2: Inventory Accuracy Rate -->
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-icon">📦</div>
+                    <div>
+                        <h3 class="kpi-title">Inventory Accuracy Rate</h3>
+                        <div class="kpi-category">INVENTORY MANAGEMENT</div>
+                    </div>
+                </div>
+                
+                <div class="measurement-section">
+                    <h4>📏 Measurement Method</h4>
+                    <p><strong>Definition:</strong> Percentage of product variants where system recorded quantities match actual available stock.</p>
+                    
+                    <div class="calculation-formula">
+IAR = (Product Variants with Accurate Stock / Total Active Product Variants) × 100%
+
+Components:
+- Accurate Stock: System quantity = Physical/Available quantity
+- Active Product Variants: Variants currently available for sale
+- Includes validation of size/color combinations
+                    </div>
+                    
+                    <p><strong>Data Sources:</strong></p>
+                    <div class="data-source">inventory.models.ProductVariant</div>
+                    <div class="data-source">inventory.models.InventoryAdjustment</div>
+                    <div class="data-source">Physical stock audits</div>
+                    
+                    <div class="measurement-frequency">Real-time Tracking</div>
+                    <div class="measurement-frequency">Weekly Audits</div>
+                </div>
+                
+                <div class="target-section">
+                    <h4>🎯 Target Values & Benchmarks</h4>
+                    <table class="benchmark-table">
+                        <thead>
+                            <tr>
+                                <th>Performance Level</th>
+                                <th>Target Range</th>
+                                <th>Business Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Excellent</strong></td>
+                                <td>≥ 98%</td>
+                                <td>Optimal customer experience</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Good</strong></td>
+                                <td>95% - 97%</td>
+                                <td>Minor stock discrepancies</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Acceptable</strong></td>
+                                <td>90% - 94%</td>
+                                <td>Increased out-of-stock risk</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Poor</strong></td>
+                                <td>< 90%</td>
+                                <td>Customer dissatisfaction</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="process-link">
+                        <h5>🔗 Related Process</h5>
+                        <p>Measures effectiveness of <strong>Inventory Management Process</strong> including variant creation, stock tracking, and adjustment workflows.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI 3: System Performance & User Experience -->
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-icon">⚡</div>
+                    <div>
+                        <h3 class="kpi-title">System Performance Score</h3>
+                        <div class="kpi-category">TECHNICAL PERFORMANCE</div>
+                    </div>
+                </div>
+                
+                <div class="measurement-section">
+                    <h4>📏 Measurement Method</h4>
+                    <p><strong>Definition:</strong> Composite score measuring system responsiveness, reliability, and user experience quality.</p>
+                    
+                    <div class="calculation-formula">
+SPS = (Page Load Performance × 0.4) + (System Uptime × 0.3) + 
+      (User Task Completion × 0.3)
+
+Where:
+- Page Load Performance: Average response time < 2 seconds
+- System Uptime: Percentage of time system is operational
+- User Task Completion: Successful completion of key user flows
+                    </div>
+                    
+                    <p><strong>Data Sources:</strong></p>
+                    <div class="data-source">Django request logs</div>
+                    <div class="data-source">Database query performance</div>
+                    <div class="data-source">User session analytics</div>
+                    <div class="data-source">Error tracking systems</div>
+                    
+                    <div class="measurement-frequency">Real-time Monitoring</div>
+                    <div class="measurement-frequency">Hourly Aggregation</div>
+                </div>
+                
+                <div class="target-section">
+                    <h4>🎯 Target Values & Benchmarks</h4>
+                    <table class="benchmark-table">
+                        <thead>
+                            <tr>
+                                <th>Metric Component</th>
+                                <th>Target Value</th>
+                                <th>Measurement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Page Load Time</strong></td>
+                                <td>< 2 seconds</td>
+                                <td>95th percentile response time</td>
+                            </tr>
+                            <tr>
+                                <td><strong>System Uptime</strong></td>
+                                <td>≥ 99.5%</td>
+                                <td>Monthly availability percentage</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Task Completion</strong></td>
+                                <td>≥ 95%</td>
+                                <td>Successful user workflow completion</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Overall Score</strong></td>
+                                <td>≥ 90/100</td>
+                                <td>Weighted composite score</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="process-link">
+                        <h5>🔗 Related Process</h5>
+                        <p>Spans all system processes, particularly impacting <strong>Dashboard Overview</strong> and <strong>User Access & Security</strong> processes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>🛠️ KPI Implementation Strategy</h2>
+        
+        <div class="implementation-grid">
+            <div class="implementation-card">
+                <h4>1. Data Collection Setup</h4>
+                <p><strong>Django Models Enhancement:</strong></p>
+                <div class="code-snippet">
+# Add timestamp fields for KPI tracking
+class Order(models.Model):
+    # ...existing fields...
+    created_at = models.DateTimeField(auto_now_add=True)
+    processing_started_at = models.DateTimeField(null=True)
+    shipped_at = models.DateTimeField(null=True)
+    delivered_at = models.DateTimeField(null=True)
+    
+    def fulfillment_time(self):
+        if self.delivered_at and self.created_at:
+            return self.delivered_at - self.created_at
+        return None
+                </div>
+            </div>
+            
+            <div class="implementation-card">
+                <h4>2. Real-time Monitoring</h4>
+                <p><strong>Django Signals for Automatic Tracking:</strong></p>
+                <div class="code-snippet">
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=Order)
+def track_order_metrics(sender, instance, **kwargs):
+    # Update KPI calculations
+    update_fulfillment_efficiency()
+                </div>
+            </div>
+            
+            <div class="implementation-card">
+                <h4>3. Dashboard Integration</h4>
+                <p><strong>KPI Dashboard Views:</strong></p>
+                <div class="code-snippet">
+# dashboard/views.py
+def kpi_dashboard(request):
+    context = {
+        'fulfillment_efficiency': calculate_fulfillment_efficiency(),
+        'inventory_accuracy': calculate_inventory_accuracy(),
+        'system_performance': calculate_system_performance(),
+        'automation_rate': calculate_automation_rate(),
+    }
+    return render(request, 'dashboard/kpi_dashboard.html', context)
+                </div>
+            </div>
+            
+            <div class="implementation-card">
+                <h4>4. Automated Reporting</h4>
+                <p><strong>Scheduled KPI Reports:</strong></p>
+                <div class="code-snippet">
+# management/commands/generate_kpi_report.py
+from django.core.management.base import BaseCommand
+
+class Command(BaseCommand):
+    def handle(self, *args, **options):
+        # Generate daily KPI report
+        generate_daily_kpi_summary()
+        send_weekly_kpi_email()
+                </div>
+            </div>
+        </div>
+
+        <h2>📈 KPI Measurement Timeline</h2>
+        
+        <table class="benchmark-table">
+            <thead>
+                <tr>
+                    <th>KPI</th>
+                    <th>Collection Frequency</th>
+                    <th>Reporting Frequency</th>
+                    <th>Review Cycle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Order Fulfillment Efficiency</strong></td>
+                    <td>Real-time</td>
+                    <td>Daily/Weekly</td>
+                    <td>Monthly</td>
+                </tr>
+                <tr>
+                    <td><strong>Inventory Accuracy Rate</strong></td>
+                    <td>Real-time</td>
+                    <td>Weekly</td>
+                    <td>Bi-weekly</td>
+                </tr>
+                <tr>
+                    <td><strong>System Performance Score</strong></td>
+                    <td>Continuous</td>
+                    <td>Daily</td>
+                    <td>Weekly</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="alert-box">
+            <h4>⚠️ Critical Success Factors</h4>
+            <ul>
+                <li><strong>Data Accuracy:</strong> Ensure all timestamp fields are properly populated</li>
+                <li><strong>Baseline Establishment:</strong> Collect 2-4 weeks of data before setting targets</li>
+                <li><strong>Stakeholder Buy-in:</strong> Regular review meetings with key stakeholders</li>
+                <li><strong>Continuous Improvement:</strong> Adjust targets based on historical performance</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <h4>🎉 Expected Benefits</h4>
+            <ul>
+                <li><strong>Operational Excellence:</strong> Clear visibility into system performance</li>
+                <li><strong>Data-Driven Decisions:</strong> Objective metrics for process improvements</li>
+                <li><strong>Customer Satisfaction:</strong> Proactive identification of experience issues</li>
+                <li><strong>Resource Optimization:</strong> Focus improvement efforts on high-impact areas</li>
+                <li><strong>Competitive Advantage:</strong> Continuous system optimization and refinement</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 40px; padding: 25px; background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); border-radius: 12px; text-align: center; color: white;">
+            <h3 style="margin-bottom: 15px;">📊 Next Steps: KPI Implementation</h3>
+            <p style="margin-bottom: 0;"><strong>Phase 1:</strong> Implement data collection mechanisms | <strong>Phase 2:</strong> Create dashboard visualizations | <strong>Phase 3:</strong> Establish automated reporting | <strong>Phase 4:</strong> Continuous monitoring and optimization</p>
+        </div>
+    </div>
+</body>
+</html>
