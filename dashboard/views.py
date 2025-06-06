@@ -19,9 +19,11 @@ def dashboard_view(request):
     today = timezone.now().date()
     today_orders = Order.objects.filter(order_date__date=today)
     
-    # Calculate total sales for today
-    total_sales_today = sum([order.total_amount for order in today_orders])
-    # total_sales_today = 0
+    # Calculate total sales for today using annotations for better performance
+    today_sales = Order.objects.filter(order_date__date=today).annotate(
+        order_total=Sum(F('items__price') * F('items__quantity'), output_field=FloatField())
+    ).aggregate(total=Coalesce(Sum('order_total'), 0, output_field=FloatField()))
+    total_sales_today = today_sales['total']
     
     # Get pending orders
     pending_orders = Order.objects.filter(status=Order.PENDING).count()
@@ -40,8 +42,11 @@ def dashboard_view(request):
     top_products = (
         OrderItem.objects.filter(order__order_date__gte=thirty_days_ago)
         .values('product_variant__product__name', 'product_variant__product__category__name')
-        .annotate(total_quantity=Sum('quantity'), total_sales=Sum('price'))
-        .order_by('-total_quantity')[:5]
+        .annotate(
+            total_quantity=Sum('quantity'), 
+            total_sales=Sum(F('quantity') * F('price'), output_field=FloatField())
+        )
+        .order_by('-total_sales')[:5]
     )
     
     context = {

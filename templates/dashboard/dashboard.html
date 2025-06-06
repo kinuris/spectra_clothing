@@ -16,14 +16,14 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium opacity-80">Sales Today</p>
-                    <h3 class="text-2xl font-bold">₱0.00</h3>
+                    <h3 class="text-2xl font-bold">₱{{ total_sales_today|floatformat:2 }}</h3>
                 </div>
                 <div class="rounded-full bg-white bg-opacity-30 p-3">
                     <i class="fas fa-money-bill-wave text-xl"></i>
                 </div>
             </div>
             <div class="mt-4 text-sm font-medium">
-                <span class="opacity-80">0 orders processed</span>
+                <span class="opacity-80">{{ orders_today_count }} orders processed</span>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium opacity-80">Pending Orders</p>
-                    <h3 class="text-2xl font-bold">0</h3>
+                    <h3 class="text-2xl font-bold">{{ pending_orders }}</h3>
                 </div>
                 <div class="rounded-full bg-white bg-opacity-30 p-3">
                     <i class="fas fa-clock text-xl"></i>
@@ -48,7 +48,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium opacity-80">Low Stock Items</p>
-                    <h3 class="text-2xl font-bold">0</h3>
+                    <h3 class="text-2xl font-bold">{{ low_stock_items }}</h3>
                 </div>
                 <div class="rounded-full bg-white bg-opacity-30 p-3">
                     <i class="fas fa-exclamation-circle text-xl"></i>
@@ -64,7 +64,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium opacity-80">Total Products</p>
-                    <h3 class="text-2xl font-bold">0</h3>
+                    <h3 class="text-2xl font-bold">{{ total_products }}</h3>
                 </div>
                 <div class="rounded-full bg-white bg-opacity-30 p-3">
                     <i class="fas fa-tshirt text-xl"></i>
@@ -96,9 +96,55 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-4 py-3 text-sm text-gray-500" colspan="5">No orders found.</td>
-                        </tr>
+                        {% if recent_orders %}
+                            {% for order in recent_orders %}
+                            <tr>
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <a href="{% url 'orders:order_detail' order.id %}" class="text-indigo-600 hover:text-indigo-900 hover:underline">
+                                        #{{ order.id }}
+                                    </a>
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                                    <a href="{% url 'orders:customer_detail' order.customer.id %}" class="text-indigo-700 hover:text-indigo-900 hover:underline">
+                                        {{ order.customer.name }}
+                                    </a>
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ order.order_date|date:"M d, Y" }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                    {% if order.status == 'pending' %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    {% elif order.status == 'processing' %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    {% elif order.status == 'shipped' %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    {% elif order.status == 'delivered' %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    {% elif order.status == 'cancelled' %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    {% else %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">₱{{ order.total_amount }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td class="px-4 py-3 text-sm text-gray-500" colspan="5">No orders found.</td>
+                            </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
@@ -121,9 +167,28 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-4 py-3 text-sm text-gray-500" colspan="4">No data available.</td>
-                        </tr>
+                        {% if top_products %}
+                            {% for product in top_products %}
+                            <tr>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ product.product_variant__product__name }}
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                                    {{ product.product_variant__product__category__name }}
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                                    {{ product.total_quantity }}
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    ₱{{ product.total_sales|floatformat:2 }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td class="px-4 py-3 text-sm text-gray-500" colspan="4">No data available.</td>
+                            </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
