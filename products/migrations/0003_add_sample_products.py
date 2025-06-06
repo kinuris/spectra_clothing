@@ -71,94 +71,40 @@ def add_sample_products(apps, schema_editor):
     # Sample products with their variants
     sample_products = [
         {
-            'name': 'Classic Cotton T-Shirt',
+            'name': 'Classic Cotton T-shirt',
             'sku': 'TS-CLASSIC-001',
-            'category': 'T-Shirts',
+            'category': 'T-shirt',
             'supplier': 'textile_experts',
             'cost_price': '8.50',
             'selling_price': '19.99',
             'description': 'A comfortable classic-fit cotton t-shirt for everyday wear. Made from 100% premium cotton for breathability and durability.',
         },
         {
-            'name': 'Slim Fit Jeans',
-            'sku': 'JN-SLIM-001',
-            'category': 'Jeans',
-            'supplier': 'fashion_wholesale',
-            'cost_price': '22.50',
-            'selling_price': '49.99',
-            'description': 'Modern slim-fit jeans with a comfortable stretch blend. Classic five-pocket design with zip fly and button closure.',
-        },
-        {
-            'name': 'Floral Summer Dress',
-            'sku': 'DR-FLORAL-001',
-            'category': 'Dresses',
-            'supplier': 'eco_fabrics',
-            'cost_price': '18.75',
-            'selling_price': '39.99',
-            'description': 'A beautiful floral pattern dress perfect for summer days. Features a flowy design with adjustable straps and elastic waistband.',
-        },
-        {
-            'name': 'Leather Bomber Jacket',
-            'sku': 'JK-BOMBER-001',
-            'category': 'Jackets',
-            'supplier': 'premium_materials',
-            'cost_price': '85.00',
-            'selling_price': '179.99',
-            'description': 'Classic bomber jacket made from premium leather. Features ribbed cuffs and hem, front zip closure, and multiple pockets.',
-        },
-        {
-            'name': 'Wool Cable Knit Sweater',
-            'sku': 'SW-CABLE-001',
-            'category': 'Sweaters',
-            'supplier': 'eco_fabrics',
-            'cost_price': '32.50',
-            'selling_price': '69.99',
-            'description': 'Warm cable knit sweater made from soft wool blend. Perfect for staying cozy during colder months.',
-        },
-        {
-            'name': 'Leather Belt',
-            'sku': 'AC-BELT-001',
-            'category': 'Accessories',
-            'supplier': 'premium_materials',
-            'cost_price': '12.25',
-            'selling_price': '29.99',
-            'description': 'Classic leather belt with metal buckle. Made from genuine leather for durability and style.',
-        },
-        {
-            'name': 'Canvas Sneakers',
-            'sku': 'SH-CANVAS-001',
-            'category': 'Shoes',
-            'supplier': 'textile_experts',
-            'cost_price': '15.75',
-            'selling_price': '34.99',
-            'description': 'Comfortable canvas sneakers with rubber sole. Perfect for casual everyday wear.',
-        },
-        {
-            'name': 'Graphic Print T-Shirt',
+            'name': 'Graphic Print T-shirt',
             'sku': 'TS-GRAPHIC-001',
-            'category': 'T-Shirts',
+            'category': 'T-shirt',
             'supplier': 'fashion_wholesale',
             'cost_price': '10.50',
             'selling_price': '24.99',
             'description': 'Eye-catching graphic print t-shirt. Made from soft cotton blend with a relaxed fit.',
         },
         {
-            'name': 'Distressed Denim Jeans',
-            'sku': 'JN-DISTRESS-001',
-            'category': 'Jeans',
-            'supplier': 'fashion_wholesale',
-            'cost_price': '25.00',
-            'selling_price': '54.99',
-            'description': 'Trendy distressed jeans with a modern fit. Features authentic worn-in details and comfortable stretch fabric.',
+            'name': 'Cropped Cotton T-shirt',
+            'sku': 'TS-CROPPED-001',
+            'category': 'Cropped Shirt',
+            'supplier': 'eco_fabrics',
+            'cost_price': '12.75',
+            'selling_price': '29.99',
+            'description': 'Stylish cropped t-shirt with shorter length. Perfect for summer with high-waisted bottoms.',
         },
         {
-            'name': 'Maxi Wrap Dress',
-            'sku': 'DR-MAXI-001',
-            'category': 'Dresses',
-            'supplier': 'eco_fabrics',
-            'cost_price': '27.50',
-            'selling_price': '59.99',
-            'description': 'Elegant maxi wrap dress perfect for any occasion. Features a flattering silhouette and tie closure.',
+            'name': 'Printed Cropped Shirt',
+            'sku': 'TS-CROPPED-002',
+            'category': 'Cropped Shirt',
+            'supplier': 'fashion_wholesale',
+            'cost_price': '14.50',
+            'selling_price': '32.99',
+            'description': 'Fashion-forward cropped shirt with trendy prints. Features a boxy silhouette and raw-edge hem.',
         }
     ]
     
@@ -205,24 +151,12 @@ def add_sample_variants(apps, schema_editor):
         product_sizes = []
         product_colors = []
         
-        if product.category.name == 'T-Shirts' or product.category.name == 'Sweaters':
+        if product.category.name == 'T-shirt':
             product_sizes = ['S', 'M', 'L', 'XL']
             product_colors = ['Black', 'White', 'Blue', 'Red', 'Gray']
-        elif product.category.name == 'Jeans':
-            product_sizes = ['S', 'M', 'L', 'XL']
-            product_colors = ['Blue', 'Black', 'Gray']
-        elif product.category.name == 'Dresses':
-            product_sizes = ['S', 'M', 'L']
-            product_colors = ['Black', 'Red', 'Blue', 'Green', 'Pink']
-        elif product.category.name == 'Jackets':
-            product_sizes = ['M', 'L', 'XL']
-            product_colors = ['Black', 'Brown', 'Blue']
-        elif product.category.name == 'Accessories':
-            product_sizes = ['S', 'M', 'L']
-            product_colors = ['Black', 'Brown']
-        elif product.category.name == 'Shoes':
-            product_sizes = ['S', 'M', 'L', 'XL']
-            product_colors = ['Black', 'White', 'Blue', 'Red']
+        elif product.category.name == 'Cropped Shirt':
+            product_sizes = ['XS', 'S', 'M', 'L']
+            product_colors = ['Black', 'White', 'Pink', 'Green', 'Yellow']
         else:
             # Default sizes and colors for other categories
             product_sizes = ['S', 'M', 'L']
@@ -269,15 +203,9 @@ def remove_sample_data(apps, schema_editor):
     # Sample SKUs and supplier names to remove
     sample_skus = [
         'TS-CLASSIC-001',
-        'JN-SLIM-001',
-        'DR-FLORAL-001',
-        'JK-BOMBER-001',
-        'SW-CABLE-001',
-        'AC-BELT-001',
-        'SH-CANVAS-001',
         'TS-GRAPHIC-001',
-        'JN-DISTRESS-001',
-        'DR-MAXI-001'
+        'TS-CROPPED-001',
+        'TS-CROPPED-002'
     ]
     
     sample_suppliers = [

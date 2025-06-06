@@ -9,13 +9,8 @@ def add_default_categories(apps, schema_editor):
     
     # Add default categories if they don't exist
     default_categories = [
-        {'name': 'T-Shirts', 'description': 'Short-sleeved casual tops'},
-        {'name': 'Jeans', 'description': 'Denim pants for all occasions'},
-        {'name': 'Dresses', 'description': 'Formal and casual dresses'},
-        {'name': 'Jackets', 'description': 'Outerwear for cold weather'},
-        {'name': 'Sweaters', 'description': 'Warm knitwear for all seasons'},
-        {'name': 'Accessories', 'description': 'Belts, hats, scarves, and more'},
-        {'name': 'Shoes', 'description': 'Footwear for all occasions'},
+        {'name': 'T-shirt', 'description': 'Short-sleeved casual tops'},
+        {'name': 'Cropped Shirt', 'description': 'Shorter length shirts with stylish cuts'},
     ]
     
     for category_data in default_categories:
@@ -28,7 +23,7 @@ def remove_default_categories(apps, schema_editor):
     Category = apps.get_model('products', 'Category')
     
     # Remove default categories
-    default_category_names = ['T-Shirts', 'Jeans', 'Dresses', 'Jackets', 'Sweaters', 'Accessories', 'Shoes']
+    default_category_names = ['T-shirt', 'Cropped Shirt']
     Category.objects.filter(name__in=default_category_names).delete()
 
 

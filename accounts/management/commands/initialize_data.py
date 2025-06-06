@@ -71,7 +71,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f'Error creating users: {str(e)}'))
             
         # Create product categories
-        categories = ['Dress', 'Shirt', 'Pants', 'Jackets', 'Accessories']
+        categories = ['T-shirt', 'Cropped Shirt']
         for category_name in categories:
             try:
                 Category.objects.get_or_create(name=category_name)
