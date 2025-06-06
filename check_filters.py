@@ -20,7 +20,7 @@ with open('dashboard/templatetags/dashboard_extras.py', 'r') as f:
     print(filters)
 
 # Setup Django environment
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'spectre_clothing.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'spectra_clothing.settings')
 django.setup()
 
 # Now we can import from our apps

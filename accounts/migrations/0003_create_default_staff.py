@@ -12,7 +12,7 @@ def create_default_staff(apps, schema_editor):
     if not User.objects.filter(username='stockmanager').exists():
         User.objects.create(
             username='stockmanager',
-            email='inventory@spectrestore.com',
+            email='inventory@spectrastore.com',
             password=make_password('StockPassword123!'),
             first_name='Inventory',
             last_name='Manager',
@@ -25,7 +25,7 @@ def create_default_staff(apps, schema_editor):
     if not User.objects.filter(username='salesstaff').exists():
         User.objects.create(
             username='salesstaff',
-            email='sales@spectrestore.com',
+            email='sales@spectrastore.com',
             password=make_password('SalesPassword123!'),
             first_name='Sales',
             last_name='Associate',

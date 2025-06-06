@@ -42,7 +42,7 @@ Spectre Clothing is a web-based application designed to help a small to medium-s
    pip install -r requirements.txt
    ```
 4. Set up the MySQL database:
-   - Create a database named `spectre_clothing_db`
+   - Create a database named `spectra_clothing_db`
    - Configure database connection in `settings.py`
 5. Apply migrations:
    ```
@@ -69,7 +69,7 @@ After running the initialize_data command, you'll have access to these users:
 ## Project Structure
 
 ```
-spectre_clothing/
+spectra_clothing/
 ├── accounts/         # User management and authentication
 ├── dashboard/        # Dashboard and reporting
 ├── inventory/        # Inventory management
@@ -79,7 +79,7 @@ spectre_clothing/
 ├── static/           # Static files (CSS, JS)
 ├── templates/        # HTML templates
 ├── media/            # Uploaded images
-└── spectre_clothing/ # Project settings
+└── spectra_clothing/ # Project settings
 ```
 
 ## License

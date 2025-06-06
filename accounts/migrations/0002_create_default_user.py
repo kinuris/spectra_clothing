@@ -12,7 +12,7 @@ def create_default_admin_user(apps, schema_editor):
     if not User.objects.filter(username='admin').exists():
         User.objects.create(
             username='admin',
-            email='admin@spectrestore.com',
+            email='admin@spectrastore.com',
             password=make_password('AdminPassword123!'),  # sets a hashed password
             first_name='Store',
             last_name='Administrator',

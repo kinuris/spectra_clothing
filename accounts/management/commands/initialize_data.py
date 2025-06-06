@@ -15,7 +15,7 @@ class Command(BaseCommand):
             if not User.objects.filter(username='admin').exists():
                 User.objects.create_superuser(
                     username='admin',
-                    email='admin@spectrestore.com',
+                    email='admin@spectrastore.com',
                     password='admin123',
                     first_name='Admin',
                     last_name='User',
@@ -32,7 +32,7 @@ class Command(BaseCommand):
             if not User.objects.filter(username='joven').exists():
                 User.objects.create_user(
                     username='joven',
-                    email='joven@spectrestore.com',
+                    email='joven@spectrastore.com',
                     password='joven123',
                     first_name='Joven',
                     last_name='Alovera',
@@ -45,7 +45,7 @@ class Command(BaseCommand):
             if not User.objects.filter(username='villy').exists():
                 User.objects.create_user(
                     username='villy',
-                    email='villy@spectrestore.com',
+                    email='villy@spectrastore.com',
                     password='villy123',
                     first_name='Villy',
                     last_name='Delsocora',
@@ -58,7 +58,7 @@ class Command(BaseCommand):
             if not User.objects.filter(username='jeanny').exists():
                 User.objects.create_user(
                     username='jeanny',
-                    email='jeanny@spectrestore.com',
+                    email='jeanny@spectrastore.com',
                     password='jeanny123',
                     first_name='Jeanny',
                     last_name='Escalada',

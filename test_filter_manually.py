@@ -7,7 +7,7 @@ import django
 import hashlib
 
 # Setup Django environment
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'spectre_clothing.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'spectra_clothing.settings')
 django.setup()
 
 # Manually test the hash_to_color function
