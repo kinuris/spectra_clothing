@@ -43,15 +43,56 @@
         .sidebar-link {
             display: flex;
             align-items: center;
-            padding: 0.75rem 1rem;
+            padding: 0.875rem 1rem; /* Slightly taller on mobile for better touch targets */
             border-radius: 0.375rem;
             color: var(--color-text-secondary, #cbd5e1); /* Default if var not set */
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
             text-decoration: none;
+            margin-bottom: 0.25rem; /* Add spacing between links */
+            position: relative;
+            overflow: hidden; /* For ripple effect */
+        }
+        
+        /* Ripple effect for mobile touch feedback */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            background-color: rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar-link {
+                padding: 1rem 1.25rem; /* Even larger touch targets on mobile */
+            }
+        }
+        
+        /* Ensure sidebar is always visible on desktop */
+        @media (min-width: 768px) {
+            aside {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                transform: translateX(0) !important;
+            }
         }
         .sidebar-link:hover {
             background-color: var(--color-accent-hover, #4f46e5); /* Default if var not set */
             color: var(--color-text-on-accent, white); /* Default if var not set */
+        }
+        .sidebar-link.active {
+            background-color: var(--color-accent, #6366f1);
+            color: var(--color-text-on-accent, white);
+            font-weight: 500;
         }
         .sidebar-link i {
             margin-right: 0.75rem;
@@ -105,77 +146,175 @@
             --color-accent-hover: #4f46e5;    /* Example: Tailwind indigo-600 */
             --color-text-on-accent: #ffffff;
         }
+        
+        /* Sticky footer styles */
+        html {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        footer {
+            margin-top: auto;
+        }
+        
+        /* Alpine.js utility - hide elements until Alpine is loaded */
+        [x-cloak] {
+            display: none !important;
+        }
+        
+        /* Prevent scrolling on body when sidebar is open on mobile */
+        body.overflow-hidden {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 
     {% block extra_css %}{% endblock %}
 </head>
-<body class="min-h-screen flex flex-col">
+<body> <!-- CSS for sticky footer is now defined in the style section -->
     <canvas id="particle-canvas"></canvas>
 
+    <div x-data="{ 
+            isOpen: window.innerWidth >= 768, // Default to open on desktop, closed on mobile
+            toggleSidebar() {
+                this.isOpen = !this.isOpen;
+                // Toggle body scroll when sidebar is open on mobile
+                if (window.innerWidth < 768) {
+                    document.body.classList.toggle('overflow-hidden', this.isOpen);
+                }
+            },
+            closeSidebar() {
+                if (window.innerWidth < 768) {
+                    this.isOpen = false;
+                    document.body.classList.remove('overflow-hidden');
+                }
+            },
+            showSidebar() {
+                if (window.innerWidth < 768) {
+                    this.isOpen = true;
+                    document.body.classList.add('overflow-hidden');
+                }
+            }
+        }" 
+        @keydown.escape="closeSidebar()"
+        class="flex flex-col min-h-screen"> <!-- Add flex column and min-height to ensure footer positioning -->
     <header class="text-white shadow-md" style="background-color: var(--color-dark-elements); border-bottom: 1px solid var(--color-border-neutral);">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
+                {% if user.is_authenticated %}
+                <button @click="toggleSidebar()" class="md:hidden text-white mr-4">
+                    <i class="fas fa-bars"></i>
+                </button>
+                {% endif %}
                 <h1 class="text-2xl font-bold font-rajdhani" style="color: var(--color-text-headings); letter-spacing: 0.08em;">SPECTRA STYLE</h1>
             </div>
             {% if user.is_authenticated %}
             <div class="flex items-center space-x-4">
-                <span style="color: var(--color-text-secondary);">Welcome, {{ user.get_full_name|default:user.username }}</span>
+                <span class="hidden sm:inline" style="color: var(--color-text-secondary);">Welcome, {{ user.get_full_name|default:user.username }}</span>
                 <a href="{% url 'accounts:logout' %}" class="btn btn-logout py-1 px-3 text-sm">
-                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                    <i class="fas fa-sign-out-alt mr-1"></i> <span class="hidden sm:inline">Logout</span>
                 </a>
             </div>
             {% endif %}
         </div>
     </header>
 
-    <div class="flex flex-1">
+    <!-- Main content area that expands to fill available space -->
+    <div class="flex flex-1 flex-grow"> 
         {% if user.is_authenticated %}
-        <aside class="w-64 py-6 px-4 hidden md:block" style="background-color: var(--color-dark-elements); border-right: 1px solid var(--color-border-neutral);">
+        <!-- Floating menu button for mobile when sidebar is closed -->
+        <button 
+            x-show="!isOpen && window.innerWidth < 768"
+            @click="showSidebar()"
+            class="fixed bottom-4 right-4 z-30 bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg md:hidden">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Mobile sidebar backdrop -->
+        <div x-show="isOpen" 
+             class="fixed inset-0 z-20 bg-black bg-opacity-50 md:hidden" 
+             @click="closeSidebar()"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+        </div>
+
+        <!-- Mobile/Desktop sidebar -->
+        <aside 
+               x-show="true" 
+               x-bind:class="{
+                 'translate-x-0 opacity-100': isOpen || window.innerWidth >= 768, 
+                 '-translate-x-full opacity-0 md:opacity-100 md:translate-x-0': !isOpen && window.innerWidth < 768
+               }"
+               x-transition:enter="transition ease-out duration-300"
+               x-transition:enter-start="-translate-x-full opacity-0"
+               x-transition:enter-end="translate-x-0 opacity-100"
+               x-transition:leave="transition ease-in duration-200"
+               x-transition:leave-start="translate-x-0 opacity-100"
+               x-transition:leave-end="-translate-x-full opacity-0"
+               class="fixed md:static inset-y-0 left-0 z-30 w-64 py-6 px-4 transform"
+               style="background-color: var(--color-dark-elements); border-right: 1px solid var(--color-border-neutral);">
+            
+            <!-- Close button for mobile -->
+            <div class="flex justify-end md:hidden mb-4">
+                <button @click="closeSidebar()" class="text-gray-300 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
             <nav>
                 <ul class="space-y-2">
                     <li>
-                        <a href="{% url 'dashboard:dashboard' %}" class="sidebar-link">
+                        <a href="{% url 'dashboard:dashboard' %}" class="sidebar-link" @click="window.innerWidth < 768 && closeSidebar()">
                             <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                     </li>
                     {% if can_manage_products %}
                     <li>
-                        <a href="{% url 'products:product_list' %}" class="sidebar-link">
+                        <a href="{% url 'products:product_list' %}" class="sidebar-link" @click="window.innerWidth < 768 && closeSidebar()">
                             <i class="fas fa-tshirt"></i> Products
                         </a>
                     </li>
                     {% endif %}
                     {% if can_manage_inventory %}
                     <li>
-                        <a href="{% url 'inventory:overview' %}" class="sidebar-link">
+                        <a href="{% url 'inventory:overview' %}" class="sidebar-link" @click="window.innerWidth < 768 && closeSidebar()">
                             <i class="fas fa-boxes"></i> Inventory
                         </a>
                     </li>
                     {% endif %}
                     {% if can_manage_orders %}
                     <li>
-                        <a href="{% url 'orders:order_list' %}" class="sidebar-link">
+                        <a href="{% url 'orders:order_list' %}" class="sidebar-link" @click="window.innerWidth < 768 && closeSidebar()">
                             <i class="fas fa-shopping-cart"></i> Orders
                         </a>
                     </li>
                     {% endif %}
                     {% if can_manage_suppliers %}
                     <li>
-                        <a href="{% url 'suppliers:supplier_list' %}" class="sidebar-link">
+                        <a href="{% url 'suppliers:supplier_list' %}" class="sidebar-link" @click="window.innerWidth < 768 && closeSidebar()">
                             <i class="fas fa-truck"></i> Suppliers
                         </a>
                     </li>
                     {% endif %}
                     {% if can_manage_users %}
                     <li>
-                        <a href="{% url 'accounts:user_list' %}" class="sidebar-link">
+                        <a href="{% url 'accounts:user_list' %}" class="sidebar-link" @click="window.innerWidth < 768 && closeSidebar()">
                             <i class="fas fa-users"></i> Users
                         </a>
                     </li>
                     {% endif %}
                     {% if can_view_reports %}
                     <li>
-                        <a href="{% url 'dashboard:report_list' %}" class="sidebar-link">
+                        <a href="{% url 'dashboard:report_list' %}" class="sidebar-link" @click="window.innerWidth < 768 && closeSidebar()">
                             <i class="fas fa-chart-line"></i> Reports
                         </a>
                     </li>
@@ -185,7 +324,7 @@
         </aside>
         {% endif %}
 
-        <main class="flex-1 p-6 overflow-y-auto">
+        <main class="flex-1 p-6 overflow-y-auto md:ml-0 transition-all duration-300" :class="{'ml-0': !isOpen, 'ml-0': isOpen && window.innerWidth >= 768}">
             {% if messages %}
                 <div class="mb-6 messages">
                     {% for message in messages %}
@@ -200,15 +339,119 @@
         </main>
     </div>
 
-    <footer class="py-6" style="background-color: var(--color-dark-elements); border-top: 1px solid var(--color-border-neutral);">
+    <footer class="py-6 mt-auto" style="background-color: var(--color-dark-elements); border-top: 1px solid var(--color-border-neutral);">
         <div class="container mx-auto px-4 text-center">
             <p style="color: var(--color-text-secondary); font-size: 0.9rem;">&copy; {% now "Y" %} Spectra Style. All rights reserved. | Elevating Fashion with Cutting-Edge Design</p>
         </div>
     </footer>
+    </div> <!-- Close the Alpine.js wrapper div -->
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js"></script>
     
     <script>
+        // Initialize Alpine.js data 
+        document.addEventListener('alpine:init', () => {
+            // Force Alpine to detect and apply correct sidebar behavior based on viewport size
+            const checkViewportMode = () => {
+                const isDesktop = window.innerWidth >= 768;
+                const mainComponent = document.querySelector('[x-data*="isOpen"]')?.__x?.$data;
+                
+                if (mainComponent) {
+                    // On desktop: always show sidebar
+                    if (isDesktop) {
+                        mainComponent.isOpen = true;
+                        document.body.classList.remove('overflow-hidden');
+                        
+                        // Force any opacity transitions to complete
+                        const sidebar = document.querySelector('aside');
+                        if (sidebar) {
+                            sidebar.classList.add('md:opacity-100');
+                            sidebar.classList.add('md:translate-x-0');
+                        }
+                    }
+                }
+            };
+            
+            // Run immediately and on resize
+            window.addEventListener('resize', checkViewportMode);
+            checkViewportMode();
+        });
+        
+        // Add ripple effect for mobile touch feedback
+        function addRippleEffect(event) {
+            const target = event.currentTarget;
+            
+            // Create ripple element
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            target.appendChild(ripple);
+            
+            // Position the ripple
+            const rect = target.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - (size / 2);
+            const y = event.clientY - rect.top - (size / 2);
+            
+            // Apply styles
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            
+            // Remove after animation
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+        
+        // Attach ripple effect to sidebar links
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('mousedown', addRippleEffect);
+            });
+        });
+        
+        // Handle resize events for sidebar responsiveness
+        window.addEventListener('resize', function() {
+            // Only proceed if Alpine.js is available
+            if (typeof Alpine !== 'undefined') {
+                // Get the main Alpine.js component
+                const mainComponent = document.querySelector('[x-data*="isOpen"]');
+                if (mainComponent && mainComponent.__x && mainComponent.__x.$data) {
+                    const isDesktop = window.innerWidth >= 768;
+                    
+                    // On desktop: ensure sidebar is always accessible and visible
+                    if (isDesktop) {
+                        // Set isOpen to true for desktop view
+                        mainComponent.__x.$data.isOpen = true;
+                        document.body.classList.remove('overflow-hidden');
+                        
+                        // Force any opacity transitions to complete
+                        const sidebar = document.querySelector('aside');
+                        if (sidebar) {
+                            sidebar.style.opacity = '1';
+                            sidebar.style.transform = 'translateX(0)';
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Highlight active sidebar link based on current URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            
+            sidebarLinks.forEach(link => {
+                const linkPath = link.getAttribute('href');
+                // Check if the current path starts with the link path (to handle nested routes)
+                if (currentPath === linkPath || 
+                    (linkPath !== '/' && currentPath === linkPath)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
         // Procedurally Generated Background Art Script
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
