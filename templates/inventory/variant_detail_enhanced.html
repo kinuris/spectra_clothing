@@ -108,11 +108,11 @@
     <div class="bg-white rounded-lg shadow-md p-4">
         <p class="text-sm text-gray-500">Cost Price</p>
         <div class="flex items-baseline mt-1">
-            <p class="text-2xl font-bold text-gray-800">${{ variant.product.cost_price }}</p>
+            <p class="text-2xl font-bold text-gray-800">₱{{ variant.product.cost_price }}</p>
             <p class="ml-2 text-xs text-gray-500">per unit</p>
         </div>
         <div class="mt-2 text-xs text-gray-500">
-            Total value: ${{ variant.quantity|multiply:variant.product.cost_price|floatformat:2 }}
+            Total value: ₱{{ variant.quantity|multiply:variant.product.cost_price|floatformat:2 }}
         </div>
     </div>
     
@@ -120,11 +120,11 @@
     <div class="bg-white rounded-lg shadow-md p-4">
         <p class="text-sm text-gray-500">Selling Price</p>
         <div class="flex items-baseline mt-1">
-            <p class="text-2xl font-bold text-indigo-600">${{ variant.product.selling_price }}</p>
+            <p class="text-2xl font-bold text-indigo-600">₱{{ variant.product.selling_price }}</p>
             <p class="ml-2 text-xs text-gray-500">per unit</p>
         </div>
         <div class="mt-2 text-xs text-gray-500">
-            Margin: ${{ variant.product.selling_price|subtract:variant.product.cost_price|floatformat:2 }} ({{ variant.product.selling_price|percentage:variant.product.cost_price|floatformat:0 }}%)
+            Margin: ₱{{ variant.product.selling_price|subtract:variant.product.cost_price|floatformat:2 }} ({{ variant.product.selling_price|percentage:variant.product.cost_price|floatformat:0 }}%)
         </div>
     </div>
 </div>

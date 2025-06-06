@@ -78,10 +78,10 @@
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Sales</h3>
-                    <p class="text-3xl font-bold text-gray-800 mt-1">${{ total_sales|floatformat:2 }}</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-1">₱{{ total_sales|floatformat:2 }}</p>
                 </div>
                 <div class="p-3 bg-green-100 rounded-full">
-                    <i class="fas fa-dollar-sign text-xl text-green-600"></i>
+                    <i class="fas fa-coins text-xl text-green-600"></i>
                 </div>
             </div>
             <div class="text-sm {% if sales_change_pct >= 0 %}text-green-600{% else %}text-red-600{% endif %} flex items-center">
@@ -112,7 +112,7 @@
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Average Order Value</h3>
-                    <p class="text-3xl font-bold text-gray-800 mt-1">${{ avg_order_value|floatformat:2 }}</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-1">₱{{ avg_order_value|floatformat:2 }}</p>
                 </div>
                 <div class="p-3 bg-purple-100 rounded-full">
                     <i class="fas fa-chart-line text-xl text-purple-600"></i>
@@ -167,7 +167,7 @@
                                     {{ sales_change_pct|floatformat:1 }}%
                                 </span>
                             </div>
-                            <div class="text-3xl font-bold text-gray-800">${{ total_sales|floatformat:2 }}</div>
+                            <div class="text-3xl font-bold text-gray-800">₱{{ total_sales|floatformat:2 }}</div>
                             <div class="text-xs text-gray-500 mt-1">vs. previous period</div>
                         </div>
                         <div class="mt-6">
@@ -240,7 +240,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">{{ category.orders }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">{{ category.units }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium text-right">${{ category.revenue|floatformat:2 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium text-right">₱{{ category.revenue|floatformat:2 }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">
                             <div class="flex items-center justify-end">
                                 <span class="mr-2">{{ category.percentage }}%</span>
@@ -262,7 +262,7 @@
                         <td class="px-6 py-3 text-left text-sm">Total</td>
                         <td class="px-6 py-3 text-right text-sm">{{ total_orders }}</td>
                         <td class="px-6 py-3 text-right text-sm">{% if category_sales %}{{ category_sales|dictsumattr:"units" }}{% else %}0{% endif %}</td>
-                        <td class="px-6 py-3 text-right text-sm font-bold text-gray-900">${{ total_sales|floatformat:2 }}</td>
+                        <td class="px-6 py-3 text-right text-sm font-bold text-gray-900">₱{{ total_sales|floatformat:2 }}</td>
                         <td class="px-6 py-3 text-right text-sm">100%</td>
                     </tr>
                 </tfoot>
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data: {
             labels: formattedDates,
             datasets: [{
-                label: 'Daily Sales ($)',
+                label: 'Daily Sales (₱)',
                 data: amounts,
                 fill: true,
                 backgroundColor: 'rgba(79, 70, 229, 0.1)',
@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return `$${context.raw}`;
+                            return `₱${context.raw}`;
                         }
                     }
                 }
@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
-                            return '$' + value;
+                            return '₱' + value;
                         }
                     }
                 }
@@ -376,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data: {
             labels: productNames,
             datasets: [{
-                label: 'Revenue ($)',
+                label: 'Revenue (₱)',
                 data: productRevenue,
                 backgroundColor: barColors,
                 borderColor: barColors.map(color => color.replace('0.8', '1')),
@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return `$${context.raw} revenue`;
+                            return `₱${context.raw} revenue`;
                         }
                     }
                 }
@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
-                            return '$' + value;
+                            return '₱' + value;
                         }
                     }
                 }
@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         label: function(context) {
                             const revenue = context.raw;
                             const percentage = Math.round((revenue / {{ total_sales|default:1 }}) * 100);
-                            return `$${revenue} (${percentage}%)`;
+                            return `₱${revenue} (${percentage}%)`;
                         }
                     }
                 }

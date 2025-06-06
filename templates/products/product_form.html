@@ -68,7 +68,7 @@
                 <label for="cost_price" class="block text-sm font-medium text-gray-800 mb-1">Cost Price*</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <span class="text-gray-600">$</span>
+                        <span class="text-gray-600">₱</span>
                     </div>
                     <input type="number" name="cost_price" id="cost_price" required 
                            value="{{ product.cost_price|default:'' }}" step="0.01" min="0"
@@ -80,7 +80,7 @@
                 <label for="selling_price" class="block text-sm font-medium text-gray-800 mb-1">Selling Price*</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <span class="text-gray-600">$</span>
+                        <span class="text-gray-600">₱</span>
                     </div>
                     <input type="number" name="selling_price" id="selling_price" required 
                            value="{{ product.selling_price|default:'' }}" step="0.01" min="0"

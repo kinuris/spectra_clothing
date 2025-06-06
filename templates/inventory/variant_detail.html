@@ -120,10 +120,10 @@
     <div class="bg-white shadow rounded-lg p-4">
         <p class="text-sm font-medium text-gray-500">Cost Price</p>
         <div class="flex items-center mt-2">
-            <p class="text-3xl font-bold text-gray-800">${{ variant.product.cost_price }}</p>
+            <p class="text-3xl font-bold text-gray-800">₱{{ variant.product.cost_price }}</p>
         </div>
         <div class="mt-4 text-xs text-gray-500">
-            Total value: ${{ variant.quantity|floatformat:0|default:"0" }} units × ${{ variant.product.cost_price }}
+            Total value: ₱{{ variant.quantity|floatformat:0|default:"0" }} units × ₱{{ variant.product.cost_price }}
         </div>
     </div>
     
@@ -131,10 +131,10 @@
     <div class="bg-white shadow rounded-lg p-4">
         <p class="text-sm font-medium text-gray-500">Selling Price</p>
         <div class="flex items-center mt-2">
-            <p class="text-3xl font-bold text-indigo-600">${{ variant.product.selling_price }}</p>
+            <p class="text-3xl font-bold text-indigo-600">₱{{ variant.product.selling_price }}</p>
         </div>
         <div class="mt-4 text-xs text-gray-500">
-            Margin: ${{ variant.product.selling_price|floatformat:2 }} − ${{ variant.product.cost_price|floatformat:2 }}
+            Margin: ₱{{ variant.product.selling_price|floatformat:2 }} − ₱{{ variant.product.cost_price|floatformat:2 }}
         </div>
     </div>
 </div>
