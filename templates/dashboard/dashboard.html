@@ -18,9 +18,6 @@
                     <p class="text-sm font-medium opacity-80">Sales Today</p>
                     <h3 class="text-2xl font-bold">₱{{ total_sales_today|floatformat:2 }}</h3>
                 </div>
-                <div class="rounded-full bg-white bg-opacity-30 p-3">
-                    <i class="fas fa-money-bill-wave text-xl"></i>
-                </div>
             </div>
             <div class="mt-4 text-sm font-medium">
                 <span class="opacity-80">{{ orders_today_count }} orders processed</span>
@@ -33,9 +30,6 @@
                 <div>
                     <p class="text-sm font-medium opacity-80">Pending Orders</p>
                     <h3 class="text-2xl font-bold">{{ pending_orders }}</h3>
-                </div>
-                <div class="rounded-full bg-white bg-opacity-30 p-3">
-                    <i class="fas fa-clock text-xl"></i>
                 </div>
             </div>
             <div class="mt-4 text-sm font-medium">
@@ -50,9 +44,6 @@
                     <p class="text-sm font-medium opacity-80">Low Stock Items</p>
                     <h3 class="text-2xl font-bold">{{ low_stock_items }}</h3>
                 </div>
-                <div class="rounded-full bg-white bg-opacity-30 p-3">
-                    <i class="fas fa-exclamation-circle text-xl"></i>
-                </div>
             </div>
             <div class="mt-4 text-sm font-medium">
                 <a href="{% url 'inventory:overview' %}" class="text-white hover:text-red-100">View inventory status &rarr;</a>
@@ -65,9 +56,6 @@
                 <div>
                     <p class="text-sm font-medium opacity-80">Total Products</p>
                     <h3 class="text-2xl font-bold">{{ total_products }}</h3>
-                </div>
-                <div class="rounded-full bg-white bg-opacity-30 p-3">
-                    <i class="fas fa-tshirt text-xl"></i>
                 </div>
             </div>
             <div class="mt-4 text-sm font-medium">

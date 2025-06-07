@@ -5,42 +5,33 @@
 {% block content %}
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"> <!-- Increased mb-8 -->
     <!-- Total Variants Card -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-white p-8 rounded-lg shadow-md">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-indigo-100 text-indigo-600 mr-4">
-                <i class="fas fa-boxes text-xl"></i>
-            </div>
             <div>
-                <h2 class="text-sm font-medium text-gray-500">Total Product Variants</h2>
-                <p class="text-3xl font-bold text-gray-800">{{ total_variants }}</p> <!-- Slightly larger number -->
+                <h2 class="text-base font-medium text-gray-500">Total Product Variants</h2>
+                <p class="text-4xl font-bold text-gray-800">{{ total_variants }}</p>
             </div>
         </div>
     </div>
     
     <!-- Low Stock Card -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-white p-8 rounded-lg shadow-md">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
-                <i class="fas fa-exclamation-triangle text-xl"></i>
-            </div>
             <div>
-                <h2 class="text-sm font-medium text-gray-500">Low Stock Items</h2>
-                <p class="text-3xl font-bold text-gray-800">{{ low_stock_variants }}</p>
-                <a href="{% url 'inventory:variant_list' %}?stock_level=low" class="text-xs text-indigo-600 hover:text-indigo-800 hover:underline mt-1 inline-block">View all</a>
+                <h2 class="text-base font-medium text-gray-500">Low Stock Items</h2>
+                <p class="text-4xl font-bold text-gray-800">{{ low_stock_variants }}</p>
+                <a href="{% url 'inventory:variant_list' %}?stock_level=low" class="text-sm text-indigo-600 hover:text-indigo-800 hover:underline mt-2 inline-block">View all</a>
             </div>
         </div>
     </div>
     
     <!-- Out of Stock Card -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-white p-8 rounded-lg shadow-md">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-red-100 text-red-600 mr-4">
-                <i class="fas fa-times-circle text-xl"></i>
-            </div>
             <div>
-                <h2 class="text-sm font-medium text-gray-500">Out of Stock Items</h2>
-                <p class="text-3xl font-bold text-gray-800">{{ out_of_stock_variants }}</p>
-                <a href="{% url 'inventory:variant_list' %}?stock_level=out" class="text-xs text-indigo-600 hover:text-indigo-800 hover:underline mt-1 inline-block">View all</a>
+                <h2 class="text-base font-medium text-gray-500">Out of Stock Items</h2>
+                <p class="text-4xl font-bold text-gray-800">{{ out_of_stock_variants }}</p>
+                <a href="{% url 'inventory:variant_list' %}?stock_level=out" class="text-sm text-indigo-600 hover:text-indigo-800 hover:underline mt-2 inline-block">View all</a>
             </div>
         </div>
     </div>
@@ -53,22 +44,18 @@
     
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5"> <!-- Adjusted gap -->
         <a href="{% url 'inventory:variant_list' %}" class="bg-indigo-50 hover:bg-indigo-100 p-5 rounded-lg text-center transition-colors duration-200 ease-in-out flex flex-col items-center justify-center group">
-            <i class="fas fa-list text-indigo-500 group-hover:text-indigo-600 text-2xl mb-2.5 transition-colors duration-200 ease-in-out"></i>
             <h3 class="text-sm font-medium text-gray-700 group-hover:text-indigo-700 transition-colors duration-200 ease-in-out">View All Variants</h3>
         </a>
         
         <a href="{% url 'inventory:variant_add' %}" class="bg-green-50 hover:bg-green-100 p-5 rounded-lg text-center transition-colors duration-200 ease-in-out flex flex-col items-center justify-center group">
-            <i class="fas fa-plus-circle text-green-500 group-hover:text-green-600 text-2xl mb-2.5 transition-colors duration-200 ease-in-out"></i>
             <h3 class="text-sm font-medium text-gray-700 group-hover:text-green-700 transition-colors duration-200 ease-in-out">Add New Variant</h3>
         </a>
         
         <a href="{% url 'inventory:adjustment_add' %}" class="bg-blue-50 hover:bg-blue-100 p-5 rounded-lg text-center transition-colors duration-200 ease-in-out flex flex-col items-center justify-center group">
-            <i class="fas fa-exchange-alt text-blue-500 group-hover:text-blue-600 text-2xl mb-2.5 transition-colors duration-200 ease-in-out"></i>
             <h3 class="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors duration-200 ease-in-out">Record Adjustment</h3>
         </a>
         
         <a href="{% url 'inventory:adjustment_list' %}" class="bg-purple-50 hover:bg-purple-100 p-5 rounded-lg text-center transition-colors duration-200 ease-in-out flex flex-col items-center justify-center group">
-            <i class="fas fa-history text-purple-500 group-hover:text-purple-600 text-2xl mb-2.5 transition-colors duration-200 ease-in-out"></i>
             <h3 class="text-sm font-medium text-gray-700 group-hover:text-purple-700 transition-colors duration-200 ease-in-out">View Adjustment History</h3>
         </a>
     </div>
@@ -133,9 +120,6 @@
     </div>
     {% else %}
     <div class="bg-gray-50 p-8 rounded-md text-center">
-        <div class="flex justify-center mb-4">
-            <i class="fas fa-boxes text-4xl text-gray-400"></i>
-        </div>
         <p class="text-gray-600 text-base font-medium">No recent inventory adjustments found.</p>
         <p class="text-gray-400 text-sm mt-1">When you make adjustments, they will appear here.</p>
     </div>
