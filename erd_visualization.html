@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database ERD Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; }
+        .mermaid {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-left: 5px solid #007bff;
+            border-radius: 4px;
+        }
+        .explanation h2 { margin-top: 0; color: #0056b3;}
+        .explanation ul { padding-left: 20px; }
+        .explanation li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Database Entity Relationship Diagram</h1>
+
+        <p>The following diagram visualizes the relationships between the different data models in the application. You can see how entities are connected via ForeignKeys, One-to-Many, and Many-to-One relationships.</p>
+
+        <div class="mermaid">
+erDiagram
+    User {
+        string username PK
+        string role "Enum: admin, stock_manager, sales"
+        string phone_number "nullable"
+    }
+    InventoryAdjustment {
+        string adjustment_type "Enum: incoming, outgoing, adjustment"
+        int quantity
+        string notes "nullable"
+        string created_by_username "FK, nullable"
+        int product_variant_id FK
+    }
+    Order {
+        datetime order_date "auto_now_add"
+        string status "Enum: pending, processing, awaiting_payment, shipped, delivered, cancelled"
+        string notes "nullable"
+        string created_by_username "FK, nullable"
+        string updated_by_username "FK, nullable"
+        int customer_id FK
+    }
+    SalesReport {
+        string report_type "Enum: daily, weekly, monthly"
+        date date_from
+        date date_to
+        decimal total_sales
+        int total_orders
+        string generated_by_username "FK, nullable"
+    }
+    Category {
+        string name PK
+        string description "nullable"
+    }
+    Product {
+        string name PK "unique"
+        decimal cost_price
+        decimal selling_price
+        string description "nullable"
+        string category_name FK
+        string supplier_name "FK, nullable"
+    }
+    ProductImage {
+        string image "ImageField"
+        boolean is_primary
+        string product_name FK
+    }
+    TopSellingProduct {
+        int total_quantity
+        decimal total_sales
+        string product_name FK
+        int report_id FK
+    }
+    Supplier {
+        string name PK
+        string contact_person
+        string email "EmailField"
+        string phone_number
+        string address "nullable"
+    }
+    Size {
+        string name PK
+    }
+    Color {
+        string name PK
+        string color_code "nullable"
+    }
+    ProductVariant {
+        int quantity
+        int reorder_level
+        string product_name FK
+        string size_name FK
+        string color_name FK
+    }
+    Customer {
+        string name PK
+        string email "EmailField, nullable"
+        string phone_number
+        string address "nullable"
+    }
+    OrderItem {
+        int quantity
+        decimal price
+        int order_id FK
+        int product_variant_id FK
+    }
+
+    User ||--o{ InventoryAdjustment : "creates"
+    User ||--o{ Order : "created_by"
+    User ||--o{ Order : "updated_by"
+    User ||--o{ SalesReport : "generated_by"
+
+    Category ||--o{ Product : "has"
+    Product }o--|| Category : "belongs_to"
+
+    Supplier ||--o{ Product : "supplies"
+    Product }o--o| Supplier : "supplied_by"
+
+    Product ||--o{ ProductImage : "has_images"
+    ProductImage }o--|| Product : "image_of"
+
+    Product ||--o{ ProductVariant : "has_variants"
+    ProductVariant }o--|| Product : "variant_of"
+
+    Product ||--o{ TopSellingProduct : "appears_as_top_selling"
+    TopSellingProduct }o--|| Product : "product_entry"
+
+    Size ||--o{ ProductVariant : "used_in_variants"
+    ProductVariant }o--|| Size : "has_size"
+
+    Color ||--o{ ProductVariant : "used_in_variants"
+    ProductVariant }o--|| Color : "has_color"
+
+    ProductVariant ||--o{ InventoryAdjustment : "has_adjustments"
+    InventoryAdjustment }o--|| ProductVariant : "adjustment_for"
+
+    ProductVariant ||--o{ OrderItem : "included_in_items"
+    OrderItem }o--|| ProductVariant : "item_is_variant"
+
+    Customer ||--o{ Order : "places"
+    Order }o--|| Customer : "belongs_to"
+
+    Order ||--o{ OrderItem : "contains_items"
+    OrderItem }o--|| Order : "part_of_order"
+
+    SalesReport ||--o{ TopSellingProduct : "lists_top_products"
+    TopSellingProduct }o--|| SalesReport : "entry_in_report"
+        </div>
+        <div class="explanation">
+            <h2>Understanding the Diagram</h2>
+            <ul>
+                <li>Each box represents an entity (a table in your database, corresponding to a Django model).</li>
+                <li>The name at the top of the box is the entity name (e.g., <code>Product</code>).</li>
+                <li>Inside each box, fields are listed. <code>PK</code> denotes a Primary Key, and <code>FK</code> denotes a Foreign Key. <code>nullable</code> means the field can be empty.</li>
+                <li>Lines between boxes show relationships:
+                    <ul>
+                        <li><code>||--o{</code> : One-to-Many (e.g., User creates many InventoryAdjustments)</li>
+                        <li><code>}o--||</code> : Many-to-One (e.g., Product belongs to one Category)</li>
+                        <li><code>}o--o|</code> : Many-to-One (optional, e.g. Product can have one Supplier, or none)</li>
+                    </ul>
+                </li>
+                <li>The text on the relationship lines describes the nature of the connection (e.g., "creates", "contains").</li>
+            </ul>
+        </div>
+        <pre>
+erDiagram
+    User {
+        string username PK
+        string role "Enum: admin, stock_manager, sales"
+        string phone_number "nullable"
+    }
+    InventoryAdjustment {
+        string adjustment_type "Enum: incoming, outgoing, adjustment"
+        int quantity
+        string notes "nullable"
+        string created_by_username "FK, nullable"
+        int product_variant_id FK
+    }
+    Order {
+        datetime order_date "auto_now_add"
+        string status "Enum: pending, processing, awaiting_payment, shipped, delivered, cancelled"
+        string notes "nullable"
+        string created_by_username "FK, nullable"
+        string updated_by_username "FK, nullable"
+        int customer_id FK
+    }
+    SalesReport {
+        string report_type "Enum: daily, weekly, monthly"
+        date date_from
+        date date_to
+        decimal total_sales
+        int total_orders
+        string generated_by_username "FK, nullable"
+    }
+    Category {
+        string name PK
+        string description "nullable"
+    }
+    Product {
+        string name PK "unique"
+        decimal cost_price
+        decimal selling_price
+        string description "nullable"
+        string category_name FK
+        string supplier_name "FK, nullable"
+    }
+    ProductImage {
+        string image "ImageField"
+        boolean is_primary
+        string product_name FK
+    }
+    TopSellingProduct {
+        int total_quantity
+        decimal total_sales
+        string product_name FK
+        int report_id FK
+    }
+    Supplier {
+        string name PK
+        string contact_person
+        string email "EmailField"
+        string phone_number
+        string address "nullable"
+    }
+    Size {
+        string name PK
+    }
+    Color {
+        string name PK
+        string color_code "nullable"
+    }
+    ProductVariant {
+        int quantity
+        int reorder_level
+        string product_name FK
+        string size_name FK
+        string color_name FK
+    }
+    Customer {
+        string name PK
+        string email "EmailField, nullable"
+        string phone_number
+        string address "nullable"
+    }
+    OrderItem {
+        int quantity
+        decimal price
+        int order_id FK
+        int product_variant_id FK
+    }
+
+    User ||--o{ InventoryAdjustment : "creates"
+    User ||--o{ Order : "created_by"
+    User ||--o{ Order : "updated_by"
+    User ||--o{ SalesReport : "generated_by"
+
+    Category ||--o{ Product : "has"
+    Product }o--|| Category : "belongs_to"
+
+    Supplier ||--o{ Product : "supplies"
+    Product }o--o| Supplier : "supplied_by"
+
+    Product ||--o{ ProductImage : "has_images"
+    ProductImage }o--|| Product : "image_of"
+
+    Product ||--o{ ProductVariant : "has_variants"
+    ProductVariant }o--|| Product : "variant_of"
+
+    Product ||--o{ TopSellingProduct : "appears_as_top_selling"
+    TopSellingProduct }o--|| Product : "product_entry"
+
+    Size ||--o{ ProductVariant : "used_in_variants"
+    ProductVariant }o--|| Size : "has_size"
+
+    Color ||--o{ ProductVariant : "used_in_variants"
+    ProductVariant }o--|| Color : "has_color"
+
+    ProductVariant ||--o{ InventoryAdjustment : "has_adjustments"
+    InventoryAdjustment }o--|| ProductVariant : "adjustment_for"
+
+    ProductVariant ||--o{ OrderItem : "included_in_items"
+    OrderItem }o--|| ProductVariant : "item_is_variant"
+
+    Customer ||--o{ Order : "places"
+    Order }o--|| Customer : "belongs_to"
+
+    Order ||--o{ OrderItem : "contains_items"
+    OrderItem }o--|| Order : "part_of_order"
+
+    SalesReport ||--o{ TopSellingProduct : "lists_top_products"
+    TopSellingProduct }o--|| SalesReport : "entry_in_report"
+        </pre>
+    </div>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>
