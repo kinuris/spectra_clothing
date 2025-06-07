@@ -27,7 +27,7 @@
             position: relative; /* Needed for z-index context if any child tries to go behind canvas */
             font-family: 'Inter', sans-serif; /* Added default font for consistency */
         }
-        /* Ensure main content sections have their defined backgrounds or are transparent as desired */
+        /* Ensure main content sections have their defined backgr""ounds or are transparent as desired */
         header, aside, footer {
             position: relative; /* Ensures they stay above the fixed canvas */
             z-index: 1;
@@ -295,6 +295,11 @@
                     <li>
                         <a href="{% url 'orders:order_list' %}" class="sidebar-link" @click="window.innerWidth < 768 && closeSidebar()">
                             <i class="fas fa-shopping-cart"></i> Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/orders/customers" class="sidebar-link" @click="window.innerWidth < 768 && closeSidebar()">
+                            <i class="fas fa-user-friends"></i> Customers
                         </a>
                     </li>
                     {% endif %}

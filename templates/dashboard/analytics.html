@@ -34,7 +34,7 @@
         <h2 class="text-lg font-medium text-gray-800 mb-4">Time Period</h2>
         
         <form method="get" action="{% url 'dashboard:analytics' %}">
-            <div class="flex flex-wrap gap-2 mb-4">
+            <!-- <div class="flex flex-wrap gap-2 mb-4">
                 <a href="{% url 'dashboard:analytics' %}?period=7" 
                    class="px-4 py-2 {% if period_days == 7 %}bg-indigo-600 text-white{% else %}bg-white border border-gray-300 text-gray-700 hover:bg-gray-50{% endif %} rounded-md text-sm font-medium">
                    Last 7 Days
@@ -55,7 +55,7 @@
                    class="px-4 py-2 {% if period_days == 365 %}bg-indigo-600 text-white{% else %}bg-white border border-gray-300 text-gray-700 hover:bg-gray-50{% endif %} rounded-md text-sm font-medium">
                    Year to Date
                 </a>
-            </div>
+            </div> -->
             
             <div class="flex flex-wrap gap-4 items-center">
                 <div class="flex items-center">

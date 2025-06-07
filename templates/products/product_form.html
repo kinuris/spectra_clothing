@@ -10,12 +10,12 @@
                 {% if product %}Edit Product{% else %}Add New Product{% endif %}
             </h1>
             {% if product %}
-            <p class="mt-2 text-sm text-gray-600">
+            <!-- <p class="mt-2 text-sm text-gray-600">
                 Having trouble saving changes? 
                 <a href="{% url 'products:product_simple_edit' product.id %}" class="text-green-600 hover:underline font-medium">
                     Try our simplified editor
                 </a>
-            </p>
+            </p> -->
             {% endif %}
         </div>
     
@@ -32,13 +32,7 @@
                        class="w-full text-gray-800 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             
-            <div>
-                <label for="sku" class="block text-sm font-medium text-gray-800 mb-1">SKU*</label>
-                <input type="text" name="sku" id="sku" required 
-                       value="{{ product.sku|default:'' }}" 
-                       class="w-full text-gray-800 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <p class="mt-1 text-sm text-gray-600">A unique identifier for this product</p>
-            </div>
+            <!-- SKU field removed, product name is now the unique identifier -->
             
             <div>
                 <label for="category" class="block text-sm font-medium text-gray-800 mb-1">Category*</label>

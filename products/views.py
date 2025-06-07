@@ -22,7 +22,7 @@ def product_list(request):
     # Search functionality
     search_query = request.GET.get('search')
     if search_query:
-        products = products.filter(name__icontains=search_query) | products.filter(sku__icontains=search_query)
+        products = products.filter(name__icontains=search_query)
     
     # Pagination
     paginator = Paginator(products, 10)  # Show 10 items per page
@@ -65,7 +65,6 @@ def product_add(request):
     
     if request.method == 'POST':
         name = request.POST.get('name')
-        sku = request.POST.get('sku')
         category_id = request.POST.get('category')
         supplier_id = request.POST.get('supplier')
         cost_price = request.POST.get('cost_price')
@@ -73,14 +72,13 @@ def product_add(request):
         description = request.POST.get('description')
         
         # Validate data
-        if Product.objects.filter(sku=sku).exists():
-            messages.error(request, f'Product with SKU {sku} already exists.')
+        if Product.objects.filter(name=name).exists():
+            messages.error(request, f'Product with name "{name}" already exists.')
         else:
             try:
                 # Create product
                 product = Product.objects.create(
                     name=name,
-                    sku=sku,
                     category_id=category_id,
                     supplier_id=supplier_id if supplier_id else None,
                     cost_price=cost_price,
@@ -139,7 +137,6 @@ def product_edit(request, product_id):
     
     if request.method == 'POST':
         name = request.POST.get('name')
-        sku = request.POST.get('sku')
         category_id = request.POST.get('category')
         supplier_id = request.POST.get('supplier')
         cost_price = request.POST.get('cost_price')
@@ -148,16 +145,15 @@ def product_edit(request, product_id):
         primary_image_id = request.POST.get('primary_image')
         
         # Debug message to track form submission data
-        print(f"Product Edit - Form Data: name={name}, sku={sku}, primary_image={primary_image_id}")
+        print(f"Product Edit - Form Data: name={name}, primary_image={primary_image_id}")
         
         # Validate data
-        if Product.objects.filter(sku=sku).exclude(id=product_id).exists():
-            messages.error(request, f'Another product with SKU {sku} already exists.')
+        if Product.objects.filter(name=name).exclude(id=product_id).exists():
+            messages.error(request, f'Another product with name "{name}" already exists.')
         else:
             try:
                 # Update product
                 product.name = name
-                product.sku = sku
                 product.category_id = category_id
                 product.supplier_id = supplier_id if supplier_id else None
                 product.cost_price = cost_price
@@ -274,7 +270,6 @@ def product_force_update(request, product_id):
         try:
             # Get basic required fields
             name = request.POST.get('name')
-            sku = request.POST.get('sku')
             category_id = request.POST.get('category')
             cost_price = request.POST.get('cost_price')
             selling_price = request.POST.get('selling_price')
@@ -285,18 +280,17 @@ def product_force_update(request, product_id):
             primary_image_id = request.POST.get('primary_image')
             
             # Basic validation for required fields
-            if not all([name, sku, category_id, cost_price, selling_price]):
+            if not all([name, category_id, cost_price, selling_price]):
                 messages.error(request, 'Required fields are missing.')
                 return redirect('products:product_edit', product_id=product_id)
             
-            # Check if SKU exists on another product
-            if Product.objects.filter(sku=sku).exclude(id=product_id).exists():
-                messages.error(request, f'Another product with SKU {sku} already exists.')
+            # Check if product name exists on another product
+            if Product.objects.filter(name=name).exclude(id=product_id).exists():
+                messages.error(request, f'Another product with name "{name}" already exists.')
                 return redirect('products:product_edit', product_id=product_id)
             
             # Update product - core fields only in this simplified version
             product.name = name
-            product.sku = sku
             product.category_id = category_id
             product.supplier_id = supplier_id if supplier_id else None
             product.cost_price = cost_price

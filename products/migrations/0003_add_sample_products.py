@@ -117,8 +117,9 @@ def add_sample_products(apps, schema_editor):
         product_data['selling_price'] = Decimal(product_data['selling_price'])
         
         # Check if product already exists
-        if not Product.objects.filter(sku=product_data['sku']).exists():
-            # Create the product
+        if not Product.objects.filter(name=product_data['name']).exists():
+            # Create the product with all fields except SKU
+            sku = product_data.pop('sku')  # Remove SKU field as it's no longer in the model
             product = Product.objects.create(
                 category=categories[category_name],
                 supplier=suppliers[supplier_key],
@@ -200,12 +201,12 @@ def remove_sample_data(apps, schema_editor):
     Product = apps.get_model('products', 'Product')
     Supplier = apps.get_model('suppliers', 'Supplier')
     
-    # Sample SKUs and supplier names to remove
-    sample_skus = [
-        'TS-CLASSIC-001',
-        'TS-GRAPHIC-001',
-        'TS-CROPPED-001',
-        'TS-CROPPED-002'
+    # Sample product names and supplier names to remove
+    sample_product_names = [
+        'Classic Cotton T-shirt',
+        'Graphic Print T-shirt',
+        'Cropped Cotton T-shirt',
+        'Printed Cropped Shirt'
     ]
     
     sample_suppliers = [
@@ -216,7 +217,7 @@ def remove_sample_data(apps, schema_editor):
     ]
     
     # Delete products and suppliers
-    Product.objects.filter(sku__in=sample_skus).delete()
+    Product.objects.filter(name__in=sample_product_names).delete()
     Supplier.objects.filter(name__in=sample_suppliers).delete()
 
 

@@ -12,7 +12,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'sku', 'category', 'supplier', 'cost_price', 'selling_price')
+    list_display = ('name', 'category', 'supplier', 'cost_price', 'selling_price')
     list_filter = ('category', 'supplier', 'created_at')
-    search_fields = ('name', 'sku', 'description')
+    search_fields = ('name', 'description')
     inlines = [ProductImageInline]

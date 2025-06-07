@@ -14,8 +14,7 @@ class Category(models.Model):
         return self.name
 
 class Product(models.Model):
-    name = models.CharField(max_length=100)
-    sku = models.CharField(max_length=30, unique=True)
+    name = models.CharField(max_length=255, unique=True)  # Increased length and made unique
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, related_name='products', null=True, blank=True)
     cost_price = models.DecimalField(max_digits=10, decimal_places=2)
