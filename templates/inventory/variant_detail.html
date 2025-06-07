@@ -277,7 +277,11 @@
                                 {{ adjustment.notes|default:"-" }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ adjustment.created_by.get_full_name|default:adjustment.created_by }}
+                                {% if adjustment.created_by %}
+                                    {{ adjustment.created_by.get_full_name|default:adjustment.created_by.username }}
+                                {% else %}
+                                    <span class="text-gray-400">System</span>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}

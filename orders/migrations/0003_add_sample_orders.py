@@ -121,7 +121,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('orders', '0002_add_sample_customers'),
-        ('products', '0003_add_sample_products'),
+        ('products', '0004_add_sample_products'),  # Updated to reference new migration number
     ]
 
     operations = [

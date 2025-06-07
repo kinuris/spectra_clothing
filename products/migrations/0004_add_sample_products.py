@@ -68,11 +68,10 @@ def add_sample_products(apps, schema_editor):
         categories[category.name] = category
         categories[category.name.lower()] = category  # Also add lowercase version
     
-    # Sample products with their variants
+    # Sample products without SKU field since it's now removed
     sample_products = [
         {
             'name': 'Classic Cotton T-shirt',
-            'sku': 'TS-CLASSIC-001',
             'category': 'T-shirt',
             'supplier': 'textile_experts',
             'cost_price': '8.50',
@@ -81,7 +80,6 @@ def add_sample_products(apps, schema_editor):
         },
         {
             'name': 'Graphic Print T-shirt',
-            'sku': 'TS-GRAPHIC-001',
             'category': 'T-shirt',
             'supplier': 'fashion_wholesale',
             'cost_price': '10.50',
@@ -90,7 +88,6 @@ def add_sample_products(apps, schema_editor):
         },
         {
             'name': 'Cropped Cotton T-shirt',
-            'sku': 'TS-CROPPED-001',
             'category': 'Cropped Shirt',
             'supplier': 'eco_fabrics',
             'cost_price': '12.75',
@@ -99,7 +96,6 @@ def add_sample_products(apps, schema_editor):
         },
         {
             'name': 'Printed Cropped Shirt',
-            'sku': 'TS-CROPPED-002',
             'category': 'Cropped Shirt',
             'supplier': 'fashion_wholesale',
             'cost_price': '14.50',
@@ -118,8 +114,7 @@ def add_sample_products(apps, schema_editor):
         
         # Check if product already exists
         if not Product.objects.filter(name=product_data['name']).exists():
-            # Create the product with all fields except SKU
-            sku = product_data.pop('sku')  # Remove SKU field as it's no longer in the model
+            # Create the product (no SKU field as it's been removed)
             product = Product.objects.create(
                 category=categories[category_name],
                 supplier=suppliers[supplier_key],
@@ -224,7 +219,7 @@ def remove_sample_data(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0002_add_default_categories'),
+        ('products', '0003_remove_sku_field'),  # Updated dependency to point to the new remove_sku_field migration
         ('inventory', '0002_add_default_sizes_colors'),
         ('suppliers', '0001_initial'),
     ]

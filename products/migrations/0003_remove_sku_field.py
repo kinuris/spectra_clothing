@@ -21,14 +21,16 @@ def transfer_sku_to_name_if_needed(apps, schema_editor):
     for name, product_list in seen_names.items():
         if len(product_list) > 1:
             for product in product_list:
-                product.name = f"{product.name} ({product.sku})"
+                # Use a unique identifier if SKU is not available
+                # Just add some number suffix to make it unique
+                product.name = f"{product.name} (Item {product.id})"
                 product.save()
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0003_add_sample_products'),
+        ('products', '0002_add_default_categories'),
     ]
 
     operations = [
