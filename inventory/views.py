@@ -422,8 +422,7 @@ def get_product_variants(request):
             'product': {
                 'id': v.product.id,
                 'name': v.product.name,
-                'price': v.product.selling_price,
-                'sku': v.product.sku
+                'price': v.product.selling_price
             }
         }
         for v in variants

@@ -41,7 +41,7 @@
                     {% endif %}
                     {{ variant.color.name }}
                 </span>
-                <span class="bg-white bg-opacity-20 rounded-full px-3 py-1 text-sm">SKU: {{ variant.product.sku }}</span>
+
             </div>
         </div>
         <div class="flex space-x-2">
@@ -151,10 +151,7 @@
                             <dt class="text-sm font-medium text-gray-500">Category</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ variant.product.category.name }}</dd>
                         </div>
-                        <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
-                            <dt class="text-sm font-medium text-gray-500">SKU</dt>
-                            <dd class="mt-1 text-sm font-mono text-gray-900 sm:mt-0 sm:col-span-2">{{ variant.product.sku }}</dd>
-                        </div>
+
                         <div class="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt class="text-sm font-medium text-gray-500">Description</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">

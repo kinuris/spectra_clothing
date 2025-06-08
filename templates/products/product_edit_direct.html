@@ -15,7 +15,6 @@
     <form id="directForm" method="post" action="{% url 'products:product_edit' product_id %}" class="hidden">
         {% csrf_token %}
         <input type="hidden" name="name" value="{{ name }}">
-        <input type="hidden" name="sku" value="{{ sku }}">
         <input type="hidden" name="category" value="{{ category_id }}">
         <input type="hidden" name="supplier" value="{{ supplier_id|default:'' }}">
         <input type="hidden" name="cost_price" value="{{ cost_price }}">

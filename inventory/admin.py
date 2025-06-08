@@ -14,7 +14,7 @@ class ColorAdmin(admin.ModelAdmin):
 class ProductVariantAdmin(admin.ModelAdmin):
     list_display = ('product', 'size', 'color', 'quantity', 'reorder_level', 'is_low_stock')
     list_filter = ('product__category', 'size', 'color')
-    search_fields = ('product__name', 'product__sku')
+    search_fields = ('product__name',)
 
 @admin.register(InventoryAdjustment)
 class InventoryAdjustmentAdmin(admin.ModelAdmin):
