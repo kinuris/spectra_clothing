@@ -57,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'spectra_clothing.middleware.AuthenticationMiddleware',
+    'spectra_clothing.middleware.PageNotFoundMiddleware',
     'spectra_clothing.middleware.RoleBasedAccessMiddleware',
 ]
 

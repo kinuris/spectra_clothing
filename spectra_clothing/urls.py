@@ -19,9 +19,19 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import redirect
+from django.contrib import messages
 
 def home_redirect(request):
     return redirect('dashboard:dashboard')
+
+def custom_404_handler(request, exception):
+    """Custom 404 handler that redirects based on authentication status"""
+    if request.user.is_authenticated:
+        messages.error(request, 'The page you requested does not exist. You have been redirected to the dashboard.')
+        return redirect('dashboard:dashboard')
+    else:
+        messages.warning(request, 'Please log in to access the system.')
+        return redirect('accounts:login')
 
 urlpatterns = [
     path('', home_redirect, name='home'),
@@ -33,6 +43,9 @@ urlpatterns = [
     path('suppliers/', include('suppliers.urls')),
     path('dashboard/', include('dashboard.urls')),
 ]
+
+# Custom error handlers
+handler404 = custom_404_handler
 
 # Add media URL for development
 if settings.DEBUG:
